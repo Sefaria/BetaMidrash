@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <color name="sefaria_green">#276194</color>
+   <color name="click_down">#ff777777</color>
+   <color name="click_up">#00ffffff</color>
+   <color name="button">#FF555555</color>
+</resources>

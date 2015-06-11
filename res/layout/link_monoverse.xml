@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:autofit="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/link"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical" >
+
+        <com.torahsummary.betamidrash.AutofitTextView
+            android:id="@+id/linkTitleTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="70dp"
+            android:singleLine="true"
+            android:text="Link Title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@layout/item_text_selector"
+            autofit:minTextSize="7sp" />
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:background="@layout/item_button_selector"
+            android:id="@+id/prevLinkBtn"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="0dp"
+            android:text="\u003c\u003c" />
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:background="@layout/item_button_selector"
+            android:id="@+id/nextLinkBtn"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="0dp"
+            android:text="\u003e\u003e" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/linkTextTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="0.88"
+        android:text="Link Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</LinearLayout>

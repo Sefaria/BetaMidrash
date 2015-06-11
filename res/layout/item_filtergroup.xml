@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+	android:padding="10dp"
+    android:background="#FF333333" >
+
+    <CheckBox
+        android:id="@+id/groupCB"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:background="#FF333333"
+        android:text=""
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:checked="true"
+        android:clickable="false"
+        android:focusable="false" />
+    
+   <TextView 
+        android:id="@+id/groupTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Group"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:textColor="#FFFFFFFF"
+        android:background="#FF333333"
+        android:clickable="false"
+        android:focusable="false"/>
+
+</LinearLayout>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="8dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginTop="8dp"
+    android:background="@layout/item_menu_selector"
+    android:orientation="horizontal" >
+
+    <ImageButton
+        android:id="@+id/bmDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:src="@drawable/ic_action_cancel" />
+
+    <TextView
+        android:id="@+id/bmText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="@layout/item_menu_selector"
+        android:gravity="center_vertical"
+        android:minHeight="60sp"
+        android:layout_marginLeft="20dp"
+        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+        android:text="yo this is text"
+        android:textColor="@android:color/white"
+        android:textSize="20dp" />
+
+</LinearLayout>

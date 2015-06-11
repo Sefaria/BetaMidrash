@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:autofit="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/textRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/titleView"
+        android:layout_width="match_parent"
+        android:minHeight="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/sefaria_green"
+        android:gravity="center"
+        android:orientation="vertical" >
+        <LinearLayout 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <com.torahsummary.betamidrash.AutofitTextView
+                clickable="false"
+                android:id="@+id/textTitleTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:singleLine="true"
+                android:text="HEADER"
+                android:textSize="15sp"
+                android:background="@layout/item_text_selector"
+                autofit:minTextSize="8sp" />
+
+            <TextView
+                android:id="@+id/titleClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#44FFFFFF"
+                android:layout_gravity="center"
+                android:text="x"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:layout_marginBottom="7dp"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            </LinearLayout>
+            <ScrollView android:id="@+id/titleScroll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                
+                
+            </ScrollView>
+            
+    </LinearLayout>
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>
