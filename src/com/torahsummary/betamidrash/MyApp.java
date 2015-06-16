@@ -2,9 +2,9 @@ package com.torahsummary.betamidrash;
 
 
 
-import com.google.android.gms.analytics.GoogleAnalytics;
+/*import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.analytics.Tracker;*/
 
 
 import android.app.Activity;
@@ -57,7 +57,7 @@ public class MyApp extends Application {
 	}
 	
 	
-	/*
+	
 	////////////////////////////////////////////////////////////////////////////////////
 	//THESE FAKE FUNCTIONS SHOULD BE UNCOMMENETED WHEN NOT USING ANYLITICS
 	public static void setTrackerID(){}
@@ -68,14 +68,14 @@ public class MyApp extends Application {
 	static public void sendException(Exception e){}
 	static public void sendException(Exception e, String addedText){e.printStackTrace();}
 	/////////////////////////////////////////////////////////////////////////////////////
-	*/
+	
 
 	
  	////////////////////////////////////////////////////////////////////////////
  	// THESE FUNCTIONS SHOULD BE COMMENETED WHEN NOT USING ANYLITICS
  	// ALSO COMMENT IMPORTS
  	////////////////////////////////////////////////////////////////////////////
- 	 
+ 	/* 
 	public static Tracker tracker = null;
 
 	public static void setTrackerID(){
@@ -165,6 +165,6 @@ public class MyApp extends Application {
 		.setFatal(false)
 		.build());
 		
-	}
+	}*/
 	
 }
