@@ -17941,6 +17941,7 @@ com.torahsummary.betamidrash.MenuLevelActivity -> com.torahsummary.betamidrash.M
     void goHome() -> a
     void searchClick(android.view.View) -> searchClick
     void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    void jewcerClick(android.view.View) -> jewcerClick
     android.widget.AutoCompleteTextView access$0(com.torahsummary.betamidrash.MenuLevelActivity) -> a
 com.torahsummary.betamidrash.MenuLevelActivity$1 -> com.torahsummary.betamidrash.MenuLevelActivity$1:
     com.torahsummary.betamidrash.MenuLevelActivity this$0 -> a
@@ -17957,6 +17958,9 @@ com.torahsummary.betamidrash.MenuLevelActivity$4 -> com.torahsummary.betamidrash
 com.torahsummary.betamidrash.MenuLevelActivity$5 -> com.torahsummary.betamidrash.MenuLevelActivity$5:
     com.torahsummary.betamidrash.MenuLevelActivity this$0 -> a
     void onClick(android.view.View) -> onClick
+com.torahsummary.betamidrash.MenuLevelActivity$6 -> com.torahsummary.betamidrash.MenuLevelActivity$6:
+    com.torahsummary.betamidrash.MenuLevelActivity this$0 -> a
+    void onGlobalLayout() -> onGlobalLayout
 com.torahsummary.betamidrash.MyApp -> com.torahsummary.betamidrash.MyApp:
     android.content.Context context -> a
     android.app.Activity currActivityContext -> b
