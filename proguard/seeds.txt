@@ -11526,6 +11526,7 @@ com.torahsummary.betamidrash.Link: android.os.Parcelable$Creator CREATOR
 com.torahsummary.betamidrash.MenuLevelActivity
 com.torahsummary.betamidrash.MenuLevelActivity: MenuLevelActivity()
 com.torahsummary.betamidrash.MenuLevelActivity: void searchClick(android.view.View)
+com.torahsummary.betamidrash.MenuLevelActivity: void jewcerClick(android.view.View)
 com.torahsummary.betamidrash.MyApp
 com.torahsummary.betamidrash.MyApp: MyApp()
 com.torahsummary.betamidrash.R$anim: int slide_in_left
@@ -11757,6 +11758,7 @@ com.torahsummary.betamidrash.R$id: int grayscale
 com.torahsummary.betamidrash.R$id: int groupCB
 com.torahsummary.betamidrash.R$id: int groupTV
 com.torahsummary.betamidrash.R$id: int he
+com.torahsummary.betamidrash.R$id: int header
 com.torahsummary.betamidrash.R$id: int hebRB
 com.torahsummary.betamidrash.R$id: int holo_dark
 com.torahsummary.betamidrash.R$id: int holo_light

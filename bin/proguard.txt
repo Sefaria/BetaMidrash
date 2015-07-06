@@ -54,6 +54,9 @@
 # onClick res/layout/activity_search.xml #generated:114
 -keepclassmembers class * { *** filterClick(...); }
 
+# onClick res/layout/activity_main.xml #generated:64
+-keepclassmembers class * { *** jewcerClick(...); }
+
 # onClick res/layout/activity_help.xml #generated:38
 -keepclassmembers class * { *** nextClick(...); }
 
@@ -69,7 +72,7 @@
 # onClick res/layout/activity_settings.xml #generated:202
 -keepclassmembers class * { *** saveSettings(...); }
 
-# onClick res/layout/activity_main.xml #generated:52
+# onClick res/layout/activity_main.xml #generated:53
 # onClick res/layout/activity_search.xml #generated:104
 -keepclassmembers class * { *** searchClick(...); }
 

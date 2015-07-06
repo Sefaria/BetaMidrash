@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.sqlite.SQLiteException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -23,9 +24,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -210,6 +213,24 @@ public class MenuLevelActivity extends ListActivity {
 		//set dropdown width to width of phone. 40 was chosen arbitrarily
 		findViewById(R.id.root).measure(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
 		actv.setDropDownWidth(findViewById(R.id.root).getMeasuredWidth()); //
+		
+		View root = findViewById(R.id.root);
+		ViewTreeObserver viewTreeObserver = root.getViewTreeObserver();
+		if (viewTreeObserver.isAlive()) {
+			viewTreeObserver
+					.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+
+						@Override
+						public void onGlobalLayout() {
+							View root = MenuLevelActivity.this
+									.findViewById(R.id.root);
+							root.getViewTreeObserver()
+									.removeOnGlobalLayoutListener(this);
+							actv.setDropDownWidth(root.getWidth());
+
+						}
+					});
+		}
 	}
 
 	@Override
@@ -621,6 +642,13 @@ public class MenuLevelActivity extends ListActivity {
 			
 		}
 	};
+	
+	public void jewcerClick(View v) {
+		String url = "http://www.jewcer.com/project/betamidrash";
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+		startActivity(browserIntent);
+	}
+	
 	//	public OnCheckedChangeListener cbListener = new OnCheckedChangeListener() {
 	//
 	//		@Override

@@ -9775,7 +9775,7 @@ com.torahsummary.betamidrash.R$raw
 com.torahsummary.betamidrash.R$string
 com.torahsummary.betamidrash.R$style
 com.torahsummary.betamidrash.R$styleable:
-    995:995:public R$styleable()
+    996:996:public R$styleable()
 com.torahsummary.betamidrash.R$xml
 com.torahsummary.betamidrash.SearchActivity:
     public static final int DONE_SEARCHING
