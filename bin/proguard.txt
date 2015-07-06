@@ -54,9 +54,6 @@
 # onClick res/layout/activity_search.xml #generated:114
 -keepclassmembers class * { *** filterClick(...); }
 
-# onClick res/layout/activity_main.xml #generated:64
--keepclassmembers class * { *** jewcerClick(...); }
-
 # onClick res/layout/activity_help.xml #generated:38
 -keepclassmembers class * { *** nextClick(...); }
 
