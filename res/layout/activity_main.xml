@@ -60,7 +60,7 @@
             android:onClick="searchClick"
             android:src="@drawable/ic_action_search" />
     </LinearLayout>
-
+<!-- 
     <LinearLayout 
         android:id="@+id/footer"
         android:gravity="center"
@@ -79,6 +79,7 @@
             android:gravity="center"
             android:text="Help our Jewcer campaign to spread Torah!"/>
     </LinearLayout>
+  -->
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
