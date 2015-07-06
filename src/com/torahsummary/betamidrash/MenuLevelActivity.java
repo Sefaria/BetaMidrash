@@ -58,7 +58,7 @@ public class MenuLevelActivity extends ListActivity {
 	private AutoCompleteTextView actv;
 	private static String[] savedMenuItems;
 
-	public void onCreate(Bundle icicle) {
+	public void onCreate(Bundle icicle) { 
 		super.onCreate(icicle);
 		setContentView(R.layout.activity_main); 
 		MyApp.currActivityContext = this;
