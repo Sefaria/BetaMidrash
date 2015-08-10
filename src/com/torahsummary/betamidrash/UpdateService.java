@@ -235,9 +235,12 @@ public class UpdateService extends Service {
 			} else if (updatedVersionNum <= currentVersionNum && userInitiated) {
 				DialogManager.dismissCurrentDialog(); //dismiss progressDialog
 				DialogManager.showDialog(DialogManager.NO_NEW_UPDATE);
+				//UpdateService.endService(); //PROBABLY NOT NECESSARY, BUT ADDED IN CASE OF FUTURE BUG (ES) 
 			} else {
 				//no new update and not user initiated
+				UpdateService.endService(); //ADDED TO STOP THE SERVICE, SINCE THERE IS NO UPDATE (ES)
 				unlockOrientation(MyApp.currActivityContext);
+				
 			}
 
 		} catch (IOException ioe) {
