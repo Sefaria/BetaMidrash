@@ -105,7 +105,12 @@
     <string name="next_search">Next Search</string>
     <string name="previous_search">Previous Search</string>
   	<string name="finished_searching">Finished searching</string>
-  	<string name="searching_help" formatted="false">You can search in Hebrew or English.\n\nEnglish will only return texts containing the exact expression (case insensitive).\nHebrew will return texts which contain all of the searched words (irrelevant of their location in the text). It ignores leading vavs (כל will also return וכל).\n\nFor advanced search use _ as single character and % as zero or more characters.\nFor example: b_g returns texts with big or bag. Name % city returns texts like name of the city. %ברא returns texts with בראם or בראשון. And כלי_ returns texts with הכלי or בכלי.</string>
+  	<string name="searching_help1">You can search in Hebrew or English.</string>
+  	<string name="searching_help2">English will only return texts containing the exact expression (case insensitive).</string>
+  	<string name="searching_help2_5">Hebrew will return texts which contain all of the searched words (irrelevant of their location in the text). It ignores leading vavs (כל will also return וכל).</string>
+  	<string name="searching_help3">For advanced search use _ as single character and % as zero or more characters.</string>
+  	<string name="searching_help3_5" formatted="false">For example: b_g returns texts with big or bag. Name % city returns texts like name of the city. %ברא returns texts with בראם or בראשון. And כלי_ returns texts with הכלי or בכלי.</string>
+  	<string name="askjosh">If you\'re looking for something in Gemara or Chumash &lt;a href=\'mailto:askjosh@torahsummary.com\'&gt;askjosh@torahsummary.com&lt;/a&gt; might be able to help.</string>
     <string name="ARE_YOU_SURE_TITLE">Are you sure you want to cancel?</string>
     <string name="ARE_YOU_SURE_MESSAGE">Are you sure you want to cancel? Your update might need to be restarted.</string>
     <string name="CHECKING_FOR_UPDATE_TITLE">Checking for update</string>

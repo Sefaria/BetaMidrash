@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -61,6 +63,24 @@ public class SearchActivity extends ListActivity {
 		MyApp.currActivityContext = this;
 		setContentView(R.layout.activity_search);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		
+		TextView askjosh = (TextView) findViewById(R.id.searchHelp);
+		askjosh.setText(Html.fromHtml(this.getString(R.string.searching_help1)
+				+ "<br><br>" + 
+				this.getString(R.string.searching_help2)
+				+ "<br>" + 
+				this.getString(R.string.searching_help2_5)
+				+ "<br><br>" + 
+				this.getString(R.string.searching_help3)
+				+ "<br>" + 
+				this.getString(R.string.searching_help3_5)
+				+ "<br><br>" + 
+				this.getString(R.string.askjosh)
+				+ "<br><br>"
+				));
+		askjosh.setMovementMethod(LinkMovementMethod.getInstance());
+		
 		// getActionBar().hide();
 
 		// need to restore state here so that AppMenu.getNamesOfChildren() will
