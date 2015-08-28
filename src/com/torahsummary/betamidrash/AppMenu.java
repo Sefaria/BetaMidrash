@@ -79,6 +79,11 @@ public class AppMenu {
 			else{
 				menuRoot = m.readTree(context.getResources().getAssets().open(JSONMenuPath));
 			}
+		/*try {
+			File indexFile = new File(MyApp.INTERNAL_FOLDER + "/" + JSONMenuPath);
+			if(indexFile.exists()) {    
+				menuRoot = m.readTree("http://www.sefaria.org/api/index");
+				Log.d("API TEST", "Success");*/
 
 			currNodeArray = menuRoot;
 			
@@ -89,9 +94,11 @@ public class AppMenu {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			MyApp.sendException(e);
+			//Log.d("API TEST", "failed: JSON processing exception");
 			return new String[0];
 		} catch (IOException e) {
 			MyApp.sendException(e);
+			//Log.d("APT TEST", "failed: IO Exception");
 			e.printStackTrace();
 			return new String[0];
 		}
