@@ -25,6 +25,12 @@ public class Text implements Parcelable {
 	public Text(Cursor cursor ){
 		getFromCursor(cursor);
 	}
+	
+	//ADDED NEW CONSTRUCTOR FOR API:
+	public Text(String enText, String heText) {
+		this.enText = enText;
+		this.heText = heText;		
+	}
 
 	public Text(int tid) {
 		Database2 dbHandler = Database2.getInstance(MyApp.context);
@@ -205,6 +211,21 @@ public class Text implements Parcelable {
 		int[] levels = new {0, 12};			
 		Text.get(1, levels); //get book bid 1 everything in chap 12.
 		 */
+		
+		//ADDED AS PER JOSH'S SAMPLE (ES):
+		try {
+		 
+		 		//TEST FOR INSTANCE OF THIS SEFER AND PEREK IN DATABASE
+		 	Database2 dbHandler = Database2.getInstance(MyApp.context);
+			SQLiteDatabase db = dbHandler.getReadableDatabase();
+		  
+		  }catch(){
+		  		return API.getTextsFromAPI(Book(bid).title,level)
+		  }
+		  
+		  
+		 
+		 
 		Database2 dbHandler = Database2.getInstance(MyApp.context);
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 
