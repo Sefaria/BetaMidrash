@@ -14,15 +14,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class API {
 	final static String BASE_URL = "http://www.sefaria.org/api/texts/";
 	final static String ZERO_CONTEXT = "?context=0";
+	protected List<Text> textList = null;
 
 	//see if function works
-	public String fetchSefariaData(String urlString){
+	protected String fetchSefariaData(String urlString){
 		
 		String sefariaData = null;
 
@@ -41,6 +43,8 @@ public class API {
                 sefariaData = "Text: " + dataArr[0] +
                         "\nhe: " + dataArr[1];
             }
+           Text text = new Text(dataArr[0], dataArr[1]);
+           textList.add(text);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             Log.d("ERROR", "malformed url");
@@ -84,13 +88,12 @@ public class API {
 	    }
 	
 	 //CHANGED RETURN VALUE TO VOID: STRING WITH JSON DATA WILL BE RETURNED IN fetchSefariaData METHOD (ES):
-	 //THIS METHOD FOR A SINGLE PASUK
-	public static void getTextFromAPI(String bookTitle, int[] levels){ //(String booktitle, int []levels)
+	public static void getTextsFromAPI(String bookTitle, int[] levels){ //(String booktitle, int []levels)
 		
 		//place should really come from book title and levels ex. [5,1]
 		//
 		
-		//loop through wityh place += "." + level[i];
+		//loop through with place += "." + level[i];
 		String place = bookTitle + "." + levels[1] + "." + levels[0];
 		String completeUrl = BASE_URL + place + ZERO_CONTEXT;
 		API api = new API();
@@ -163,7 +166,8 @@ public class API {
 
 	        @Override
 	        protected void onPostExecute(String result) {
-	           //TODO: Fill in later
+	        	//TODO: FILL IN: 
+	        	//How about using intent to push the List<Text> to Text.java using Parcelable, as Text class already implements it? (ES)
 	        }
 	    }
 	}

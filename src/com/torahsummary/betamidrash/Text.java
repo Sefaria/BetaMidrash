@@ -219,8 +219,11 @@ public class Text implements Parcelable {
 		 	Database2 dbHandler = Database2.getInstance(MyApp.context);
 			SQLiteDatabase db = dbHandler.getReadableDatabase();
 		  
-		  }catch(){
-		  		return API.getTextsFromAPI(Book(bid).title,level)
+		  }catch(Exception e){
+			  e.printStackTrace();
+		  	//return API.getTextsFromAPI(Book(bid).title,level) 
+			  API.getTextsFromAPI(Kbid, levels); // NEED TO CONVERT BID TO TITLE OF BOOK
+			  
 		  }
 		  
 		  
