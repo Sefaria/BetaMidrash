@@ -21,7 +21,7 @@ import android.util.Log;
 public class API {
 	final static String BASE_URL = "http://www.sefaria.org/api/texts/";
 	final static String ZERO_CONTEXT = "?context=0";
-	protected List<Text> textList = null;
+	protected static List<Text> textList = null;
 
 	//see if function works
 	protected String fetchSefariaData(String urlString){
@@ -45,6 +45,7 @@ public class API {
             }
            Text text = new Text(dataArr[0], dataArr[1]);
            textList.add(text);
+           
         } catch (MalformedURLException e) {
             e.printStackTrace();
             Log.d("ERROR", "malformed url");
@@ -86,6 +87,8 @@ public class API {
 	        return  dataArr;
 
 	    }
+	 
+	 
 	
 	 //CHANGED RETURN VALUE TO VOID: STRING WITH JSON DATA WILL BE RETURNED IN fetchSefariaData METHOD (ES):
 	public static void getTextsFromAPI(String bookTitle, int[] levels){ //(String booktitle, int []levels)
@@ -98,6 +101,7 @@ public class API {
 		String completeUrl = BASE_URL + place + ZERO_CONTEXT;
 		API api = new API();
 		api.new JSONParserTask().execute(completeUrl);
+		
 	}
 		//Sefaria levels:
 		// booktitle.biggestlevel.smaller.smallest
