@@ -206,7 +206,8 @@ public class Text implements Parcelable {
 	 */
 
 	public static List<Text> get(int bid, int[] levels) {
-
+		
+		List<Text> textList;
 		/*//EXAMPLE:
 		int[] levels = new {0, 12};			
 		Text.get(1, levels); //get book bid 1 everything in chap 12.
@@ -218,17 +219,31 @@ public class Text implements Parcelable {
 		 		//TEST FOR INSTANCE OF THIS SEFER AND PEREK IN DATABASE
 		 	Database2 dbHandler = Database2.getInstance(MyApp.context);
 			SQLiteDatabase db = dbHandler.getReadableDatabase();
+			textList = new ArrayList<Text>();
+
+			Cursor cursor = db.rawQuery("SELECT DISTINCT * FROM "+ TABLE_TEXTS +" " + fullWhere(bid, levels) + " ORDER BY " + orderBy(bid, levels), null);
+
+			//Cursor cursor1 = db.query(TABLE_TEXTS, null, whereStatement, whereArgs, null, null, orderBy);
+
+			// looping through all rows and adding to list
+			if (cursor.moveToFirst()) {
+				do {
+					// Adding  to list
+					textList.add(new Text(cursor));
+				} while (cursor.moveToNext());
+			}
 		  
 		  }catch(Exception e){
 			  e.printStackTrace();
 		  	//return API.getTextsFromAPI(Book(bid).title,level) 
-			  API.getTextsFromAPI(Kbid, levels); // NEED TO CONVERT BID TO TITLE OF BOOK
+			 // API.getTextsFromAPI(Kbid, levels); // NEED TO CONVERT BID TO TITLE OF BOOK; UPDATED SEP 16 LINE 240 BELOW 
+			  API.getTextsFromAPI(Book.getTitle(bid), levels); //WILL NOW CONVERT BID TO TITLE FOR API CLASS TO RETRIEVE DATA 
 			 return API.textList;
 		  }
 		  
 		  
 		 
-		 
+		/* 
 		Database2 dbHandler = Database2.getInstance(MyApp.context);
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 
@@ -244,7 +259,7 @@ public class Text implements Parcelable {
 				// Adding  to list
 				textList.add(new Text(cursor));
 			} while (cursor.moveToNext());
-		}
+		}*/
 
 		/*	//LOGING:
 		for(int i = 0; i < textList.size(); i++)
@@ -302,6 +317,7 @@ public class Text implements Parcelable {
 			dummyChapText.level3 = 0;
 		if(wherePage > 4)
 			dummyChapText.level4 = 0;
+		
 		if(wherePage > 5)
 			dummyChapText.level5 = 0;
 		if(wherePage > 6)
