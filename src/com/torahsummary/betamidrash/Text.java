@@ -85,7 +85,6 @@ public class Text implements Parcelable {
 
 	public static final String TABLE_TEXTS = "Texts";
 
-
 	public void getFromCursor(Cursor cursor){
 		tid = cursor.getInt(0);
 		bid = cursor.getInt(1);
@@ -116,7 +115,7 @@ public class Text implements Parcelable {
 		Database2 dbHandler = Database2.getInstance(MyApp.context);
 		List<Text> textList = new ArrayList<Text>();
 		// Select All Query
-		String selectQuery = "SELECT  * FROM " + TABLE_TEXTS;
+		String selectQuery = "SELECT * FROM " + TABLE_TEXTS;
 
 		SQLiteDatabase db = dbHandler.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
@@ -205,61 +204,49 @@ public class Text implements Parcelable {
 	}
 	 */
 
-	public static List<Text> get(int bid, int[] levels) {
-		
-		List<Text> textList;
+		public static List<Text> get(int bid, int[] levels) {
+
 		/*//EXAMPLE:
 		int[] levels = new {0, 12};			
 		Text.get(1, levels); //get book bid 1 everything in chap 12.
 		 */
 		
+		List<Text> textList = new ArrayList<Text>();
 		//ADDED AS PER JOSH'S SAMPLE (ES):
 		try {
 		 
 		 		//TEST FOR INSTANCE OF THIS SEFER AND PEREK IN DATABASE
 		 	Database2 dbHandler = Database2.getInstance(MyApp.context);
 			SQLiteDatabase db = dbHandler.getReadableDatabase();
-			textList = new ArrayList<Text>();
-
+			
 			Cursor cursor = db.rawQuery("SELECT DISTINCT * FROM "+ TABLE_TEXTS +" " + fullWhere(bid, levels) + " ORDER BY " + orderBy(bid, levels), null);
-
-			//Cursor cursor1 = db.query(TABLE_TEXTS, null, whereStatement, whereArgs, null, null, orderBy);
-
-			// looping through all rows and adding to list
+			
 			if (cursor.moveToFirst()) {
 				do {
 					// Adding  to list
 					textList.add(new Text(cursor));
 				} while (cursor.moveToNext());
 			}
+			
 		  
 		  }catch(Exception e){
 			  e.printStackTrace();
 		  	//return API.getTextsFromAPI(Book(bid).title,level) 
-			 // API.getTextsFromAPI(Kbid, levels); // NEED TO CONVERT BID TO TITLE OF BOOK; UPDATED SEP 16 LINE 240 BELOW 
-			  API.getTextsFromAPI(Book.getTitle(bid), levels); //WILL NOW CONVERT BID TO TITLE FOR API CLASS TO RETRIEVE DATA 
-			 return API.textList;
+			  //API.getTextsFromAPI(Kbid, levels); // NEED TO CONVERT BID TO TITLE OF BOOK
+			  API.getTextsFromAPI(Book.getTitle(bid), levels);
 		  }
 		  
-		  
-		 
-		/* 
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
-		SQLiteDatabase db = dbHandler.getReadableDatabase();
-
-		List<Text> textList = new ArrayList<Text>();
-
-		Cursor cursor = db.rawQuery("SELECT DISTINCT * FROM "+ TABLE_TEXTS +" " + fullWhere(bid, levels) + " ORDER BY " + orderBy(bid, levels), null);
-
+		return textList;
+		
 		//Cursor cursor1 = db.query(TABLE_TEXTS, null, whereStatement, whereArgs, null, null, orderBy);
 
 		// looping through all rows and adding to list
-		if (cursor.moveToFirst()) {
+		/*if (cursor.moveToFirst()) {
 			do {
 				// Adding  to list
 				textList.add(new Text(cursor));
 			} while (cursor.moveToNext());
-		}*/
+		}**/
 
 		/*	//LOGING:
 		for(int i = 0; i < textList.size(); i++)
@@ -268,7 +255,7 @@ public class Text implements Parcelable {
 		//findWordsInList(textList, "the");
 		//findWordsInList(textList,"ש");
 
-		return textList;
+		
 	}
 
 
@@ -317,7 +304,6 @@ public class Text implements Parcelable {
 			dummyChapText.level3 = 0;
 		if(wherePage > 4)
 			dummyChapText.level4 = 0;
-		
 		if(wherePage > 5)
 			dummyChapText.level5 = 0;
 		if(wherePage > 6)

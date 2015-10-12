@@ -1,9 +1,7 @@
 package com.torahsummary.betamidrash;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -21,7 +19,7 @@ import android.util.Log;
 public class API {
 	final static String BASE_URL = "http://www.sefaria.org/api/texts/";
 	final static String ZERO_CONTEXT = "?context=0";
-	protected static List<Text> textList = null;
+	protected List<Text> textList = new ArrayList<Text>();
 
 	//see if function works
 	protected String fetchSefariaData(String urlString){
@@ -45,7 +43,6 @@ public class API {
             }
            Text text = new Text(dataArr[0], dataArr[1]);
            textList.add(text);
-           
         } catch (MalformedURLException e) {
             e.printStackTrace();
             Log.d("ERROR", "malformed url");
@@ -59,7 +56,7 @@ public class API {
 	 static String convertStreamToString(java.io.InputStream is) {
 	        java.util.Scanner scanner = new java.util.Scanner(is).useDelimiter("\\A");
 	        return scanner.hasNext() ? scanner.next() : "";
-	    }
+	 }
 	
 	
 	 protected String[] parseJSON(String in) {
@@ -87,8 +84,6 @@ public class API {
 	        return  dataArr;
 
 	    }
-	 
-	 
 	
 	 //CHANGED RETURN VALUE TO VOID: STRING WITH JSON DATA WILL BE RETURNED IN fetchSefariaData METHOD (ES):
 	public static void getTextsFromAPI(String bookTitle, int[] levels){ //(String booktitle, int []levels)
@@ -154,7 +149,7 @@ public class API {
 	//}
 
 	//once you can get a single Text from a json, we can make it work for a whole perek:
-	//CHANGED RETURNT TO VOID, 
+	//CHANGED RETURN TO VOID, 
 	public static List<Text>  getTextsFromAPI(){ //(String booktitle, int []levels){
 		List<Text> textList = new ArrayList<Text>();
 		//similar things to single function... once this is working it should be able to be used instead of single function:
@@ -172,6 +167,7 @@ public class API {
 	        protected void onPostExecute(String result) {
 	        	//TODO: FILL IN: 
 	        	//How about using intent to push the List<Text> to Text.java using Parcelable, as Text class already implements it? (ES)
+	        	Intent intent = new Intent();
 	        }
 	    }
 	}
