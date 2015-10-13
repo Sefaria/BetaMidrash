@@ -19,10 +19,10 @@ import android.util.Log;
 public class API {
 	final static String BASE_URL = "http://www.sefaria.org/api/texts/";
 	final static String ZERO_CONTEXT = "?context=0";
-	protected List<Text> textList = new ArrayList<Text>();
+	protected static List<Text> textList = new ArrayList<Text>();
 
 	//see if function works
-	protected String fetchSefariaData(String urlString){
+	protected List<Text> fetchSefariaData(String urlString){
 		
 		String sefariaData = null;
 
@@ -41,8 +41,10 @@ public class API {
                 sefariaData = "Text: " + dataArr[0] +
                         "\nhe: " + dataArr[1];
             }
-           Text text = new Text(dataArr[0], dataArr[1]);
-           textList.add(text);
+            
+            Text text = new Text(dataArr[0], dataArr[1]);
+            textList.add(text);
+          
         } catch (MalformedURLException e) {
             e.printStackTrace();
             Log.d("ERROR", "malformed url");
@@ -50,7 +52,7 @@ public class API {
             e.printStackTrace();
             Log.d("ERROR", "io exception");
         }
-        return sefariaData;
+        return textList;
 	}
 	
 	 static String convertStreamToString(java.io.InputStream is) {
@@ -86,7 +88,7 @@ public class API {
 	    }
 	
 	 //CHANGED RETURN VALUE TO VOID: STRING WITH JSON DATA WILL BE RETURNED IN fetchSefariaData METHOD (ES):
-	public static void getTextsFromAPI(String bookTitle, int[] levels){ //(String booktitle, int []levels)
+	public static List<Text> getTextsFromAPI(String bookTitle, int[] levels){ //(String booktitle, int []levels)
 		
 		//place should really come from book title and levels ex. [5,1]
 		//
@@ -96,6 +98,8 @@ public class API {
 		String completeUrl = BASE_URL + place + ZERO_CONTEXT;
 		API api = new API();
 		api.new JSONParserTask().execute(completeUrl);
+		
+		return textList;
 		
 	}
 		//Sefaria levels:
@@ -156,15 +160,15 @@ public class API {
 		// and if you ask for an exact text say Genesis, [5,1] it will be a List of 1. And if you ask for the whole 1st perek, say, Genesis [0,1] it will give you a List of texts
 		return textList;
 	}
-	 private class JSONParserTask extends AsyncTask <String, Void, String> {
+	 private class JSONParserTask extends AsyncTask <String, Void, List<Text>> {
 	        @Override
-	        protected String doInBackground(String... params) {
-	            String result = fetchSefariaData(params[0]);
+	        protected List<Text> doInBackground(String... params) {
+	            List<Text> result = fetchSefariaData(params[0]);
 	            return result;
 	        }
 
 	        @Override
-	        protected void onPostExecute(String result) {
+	        protected void onPostExecute(List<Text> result) {
 	        	//TODO: FILL IN: 
 	        	//How about using intent to push the List<Text> to Text.java using Parcelable, as Text class already implements it? (ES)
 	        	Intent intent = new Intent();
