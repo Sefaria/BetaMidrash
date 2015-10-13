@@ -2,9 +2,11 @@ package com.torahsummary.betamidrash;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 
 
@@ -15,6 +17,7 @@ import android.database.sqlite.SQLiteStatement;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import android.widget.Toast;
 
 public class Text implements Parcelable {
 
@@ -387,32 +390,38 @@ public class Text implements Parcelable {
 
 	public static ArrayList<Integer> getChaps(int bid, int[] levels) {
 
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
-		SQLiteDatabase db = dbHandler.getReadableDatabase();
+		 Database2 dbHandler = Database2.getInstance(MyApp.context);
+	        SQLiteDatabase db = dbHandler.getReadableDatabase();
 
-		ArrayList<Integer> chapList = new ArrayList<Integer>();
+	        ArrayList<Integer> chapList = new ArrayList<Integer>();
 
-		int nonZeroLevel;
-		for(nonZeroLevel = 0; nonZeroLevel < levels.length; nonZeroLevel++){
-			if(levels[nonZeroLevel] != 0)
-				break;
-		}
-		String sql = "SELECT DISTINCT level" + nonZeroLevel + " FROM "+ TABLE_TEXTS +" " + fullWhere(bid, levels) + " ORDER BY "  + "level" + nonZeroLevel;
-		Cursor cursor = db.rawQuery(sql, null);
+	        int nonZeroLevel;
+	        for(nonZeroLevel = 0; nonZeroLevel < levels.length; nonZeroLevel++){
+	            if(levels[nonZeroLevel] != 0)
+	                break;
+	        }
+	        String sql = "SELECT DISTINCT level" + nonZeroLevel + " FROM "+ TABLE_TEXTS +" " + fullWhere(bid, levels) + " ORDER BY "  + "level" + nonZeroLevel;
 
-		// looping through all rows and adding to list
-		if (cursor.moveToFirst()) {
-			do {
-				// Adding  to list
-				chapList.add(Integer.valueOf((cursor.getInt(0))));
-			} while (cursor.moveToNext());
-		}
+	        try{
+	            Cursor cursor = db.rawQuery(sql, null);
 
-		/*//LOGING:
-		for(int i = 0; i < chapList.size(); i++)
-			Log.d("sql_chapList" , chapList.get(i).toString());
-		 */
-		return chapList;
+	            // looping through all rows and adding to list
+	            if (cursor.moveToFirst()) {
+	                do {
+	                    // Adding  to list
+	chapList.add(Integer.valueOf((cursor.getInt(0))));
+	                } while (cursor.moveToNext());
+	            }
+	        }catch(Exception e){
+	            Toast.makeText(MyApp.context, "couldn't find Texts so just showing chap 1",Toast.LENGTH_SHORT).show();
+	            chapList.add(1);//this actually needs a way of getting chap numbers.. Lets think about that for a bit
+	        }
+
+	        /*//LOGING:
+	        for(int i = 0; i < chapList.size(); i++)
+	            Log.d("sql_chapList" , chapList.get(i).toString());
+	         */
+	        return chapList;
 	}
 
 	private static String[] whereArgs(int bid, int[] levels){
