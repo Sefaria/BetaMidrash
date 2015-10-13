@@ -236,7 +236,7 @@ public class Text implements Parcelable {
 			  e.printStackTrace();
 		  	//return API.getTextsFromAPI(Book(bid).title,level) 
 			  //API.getTextsFromAPI(Kbid, levels); // NEED TO CONVERT BID TO TITLE OF BOOK
-			  API.getTextsFromAPI(Book.getTitle(bid), levels);
+			  textList = API.getTextsFromAPI(Book.getTitle(bid), levels);
 		  }
 		  
 		return textList;
