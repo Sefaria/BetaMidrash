@@ -20,11 +20,12 @@ public class API {
 	final static String BASE_URL = "http://www.sefaria.org/api/texts/";
 	final static String ZERO_CONTEXT = "?context=0";
 	protected static List<Text> textList = new ArrayList<Text>();
+	String sefariaData = null;
 
 	//see if function works
 	protected List<Text> fetchSefariaData(String urlString){
 		
-		String sefariaData = null;
+		
 
         try {
            URL url = new URL(urlString);
@@ -94,7 +95,20 @@ public class API {
 		//
 		
 		//loop through with place += "." + level[i];
-		String place = bookTitle + "." + levels[1] + "." + levels[0];
+		/*String place = bookTitle + "." + levels[1] + "." + levels[0];
+		String completeUrl = BASE_URL + place + ZERO_CONTEXT;
+		API api = new API();
+		api.new JSONParserTask().execute(completeUrl);
+		
+		return textList;*/
+		
+		String place = "";
+		if (levels[0] == 0){
+			place = bookTitle + "." + levels[1];
+		}
+		else {
+			place = bookTitle + "." + levels[1] + "." + levels[0];
+		}
 		String completeUrl = BASE_URL + place + ZERO_CONTEXT;
 		API api = new API();
 		api.new JSONParserTask().execute(completeUrl);
