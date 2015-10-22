@@ -13,7 +13,10 @@ import org.json.JSONObject;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -28,11 +31,15 @@ public class Text implements Parcelable {
 	public Text(Cursor cursor ){
 		getFromCursor(cursor);
 	}
-	
+
 	//ADDED NEW CONSTRUCTOR FOR API:
 	public Text(String enText, String heText) {
 		this.enText = enText;
-		this.heText = heText;		
+		this.heText = heText;
+		this.tid = 0;
+		this.bid = 0;
+		levels = new int [] {0,0,0,0,0,0};
+		this.displayNum = true;//unless we know otherwise, we'll default to display the verse Number
 	}
 
 	public Text(int tid) {
@@ -207,40 +214,52 @@ public class Text implements Parcelable {
 	}
 	 */
 
-		public static List<Text> get(int bid, int[] levels) {
 
-		/*//EXAMPLE:
-		int[] levels = new {0, 12};			
-		Text.get(1, levels); //get book bid 1 everything in chap 12.
-		 */
-		
+	private static List<Text> getFromDB(int bid, int[] levels) {
 		List<Text> textList = new ArrayList<Text>();
-		//ADDED AS PER JOSH'S SAMPLE (ES):
-		try {
-		 
-		 		//TEST FOR INSTANCE OF THIS SEFER AND PEREK IN DATABASE
-		 	Database2 dbHandler = Database2.getInstance(MyApp.context);
-			SQLiteDatabase db = dbHandler.getReadableDatabase();
-			
-			Cursor cursor = db.rawQuery("SELECT DISTINCT * FROM "+ TABLE_TEXTS +" " + fullWhere(bid, levels) + " ORDER BY " + orderBy(bid, levels), null);
-			
-			if (cursor.moveToFirst()) {
-				do {
-					// Adding  to list
-					textList.add(new Text(cursor));
-				} while (cursor.moveToNext());
-			}
-			
-		  
-		  }catch(Exception e){
-			  e.printStackTrace();
-		  	//return API.getTextsFromAPI(Book(bid).title,level) 
-			  //API.getTextsFromAPI(Kbid, levels); // NEED TO CONVERT BID TO TITLE OF BOOK
-			  textList = API.getTextsFromAPI(Book.getTitle(bid), levels);
-		  }
-		  
+		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		SQLiteDatabase db = dbHandler.getReadableDatabase();
+
+		Cursor cursor = db.rawQuery("SELECT DISTINCT * FROM "+ TABLE_TEXTS +" " + fullWhere(bid, levels) + " ORDER BY " + orderBy(bid, levels), null);
+
+		if (cursor.moveToFirst()) {
+			do {
+				// Adding  to list
+				textList.add(new Text(cursor));
+			} while (cursor.moveToNext());
+		}
 		return textList;
-		
+
+	}
+
+	/**
+	 * 
+	 * @param bid
+	 * @param levels
+	 * EXAMPLE:
+	 * 	int[] levels = new {0, 12};
+	 * 	Text.get(1, levels); //get book bid 1 everything in chap 12.
+	 * @return
+	 */
+	public static List<Text> get(int bid, int[] levels) {
+		List<Text> textList = new ArrayList<Text>();
+		try {
+			getFromDB(bid,levels);
+		}catch(SQLiteException e){
+			if(!e.toString().contains("no such table: Texts")){
+				throw e; //don't know what the problem is so throw it back out
+			}
+			Log.d("api", "Getting text: " + e.toString());
+
+			//API api = new API();
+			textList = API.getTextsFromAPI(Book.getTitle(bid), levels);
+			Log.d("api","in TEXT textList:" + + textList.size());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+		return textList;
+
 		//Cursor cursor1 = db.query(TABLE_TEXTS, null, whereStatement, whereArgs, null, null, orderBy);
 
 		// looping through all rows and adding to list
@@ -258,7 +277,7 @@ public class Text implements Parcelable {
 		//findWordsInList(textList, "the");
 		//findWordsInList(textList,"ש");
 
-		
+
 	}
 
 
@@ -378,7 +397,7 @@ public class Text implements Parcelable {
 		return;
 	}
 
-	
+
 
 
 	public static void removeLang(SQLiteDatabase db, String title, String lang){
@@ -390,38 +409,42 @@ public class Text implements Parcelable {
 
 	public static ArrayList<Integer> getChaps(int bid, int[] levels) {
 
-		 Database2 dbHandler = Database2.getInstance(MyApp.context);
-	        SQLiteDatabase db = dbHandler.getReadableDatabase();
+		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		SQLiteDatabase db = dbHandler.getReadableDatabase();
 
-	        ArrayList<Integer> chapList = new ArrayList<Integer>();
+		ArrayList<Integer> chapList = new ArrayList<Integer>();
 
-	        int nonZeroLevel;
-	        for(nonZeroLevel = 0; nonZeroLevel < levels.length; nonZeroLevel++){
-	            if(levels[nonZeroLevel] != 0)
-	                break;
-	        }
-	        String sql = "SELECT DISTINCT level" + nonZeroLevel + " FROM "+ TABLE_TEXTS +" " + fullWhere(bid, levels) + " ORDER BY "  + "level" + nonZeroLevel;
+		int nonZeroLevel;
+		for(nonZeroLevel = 0; nonZeroLevel < levels.length; nonZeroLevel++){
+			if(levels[nonZeroLevel] != 0)
+				break;
+		}
+		String sql = "SELECT DISTINCT level" + nonZeroLevel + " FROM "+ TABLE_TEXTS +" " + fullWhere(bid, levels) + " ORDER BY "  + "level" + nonZeroLevel;
 
-	        try{
-	            Cursor cursor = db.rawQuery(sql, null);
+		try{
+			Cursor cursor = db.rawQuery(sql, null);
 
-	            // looping through all rows and adding to list
-	            if (cursor.moveToFirst()) {
-	                do {
-	                    // Adding  to list
-	chapList.add(Integer.valueOf((cursor.getInt(0))));
-	                } while (cursor.moveToNext());
-	            }
-	        }catch(Exception e){
-	            Toast.makeText(MyApp.context, "couldn't find Texts so just showing chap 1",Toast.LENGTH_SHORT).show();
-	            chapList.add(1);//this actually needs a way of getting chap numbers.. Lets think about that for a bit
-	        }
+			// looping through all rows and adding to list
+			if (cursor.moveToFirst()) {
+				do {
+					// Adding  to list
+					chapList.add(Integer.valueOf((cursor.getInt(0))));
+				} while (cursor.moveToNext());
+			}
+		}catch(Exception e){
+			Toast.makeText(MyApp.context, "couldn't find Texts so just showing chap 1",Toast.LENGTH_SHORT).show();
+			//TODO this actually needs a way of getting chap numbers.. Lets think about that for a bit
+			int fakeChaps = 5;
+			for(int i =1;i<fakeChaps;i++)
+				chapList.add(i);
+			
+		}
 
-	        /*//LOGING:
+		/*//LOGING:
 	        for(int i = 0; i < chapList.size(); i++)
 	            Log.d("sql_chapList" , chapList.get(i).toString());
-	         */
-	        return chapList;
+		 */
+		return chapList;
 	}
 
 	private static String[] whereArgs(int bid, int[] levels){
@@ -706,6 +729,16 @@ public class Text implements Parcelable {
 		newText.displayNum = text.displayNum;
 		return newText;
 	}
+
+	@Override
+	public String toString() {
+		String string =  tid + "-" + bid ;
+		for(int i=0;i<levels.length;i++)
+			string+= "." + levels[i];
+		string += " " + enText + " " + heText;
+		return string;
+	}
+
 
 	//PARCELABLE------------------------------------------------------------------------
 
