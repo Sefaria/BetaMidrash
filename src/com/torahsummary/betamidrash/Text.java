@@ -406,19 +406,23 @@ public class Text implements Parcelable {
 		db.update(TABLE_TEXTS, values,Kbid+ "=?", new String [] {String.valueOf(Book.getBid(title))});
 		Log.d("sql_removed_lang", title + " removed " + lang);
 	}
-
-	public static ArrayList<Integer> getChaps(int bid, int[] levels) {
-
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
-		SQLiteDatabase db = dbHandler.getReadableDatabase();
-
-		ArrayList<Integer> chapList = new ArrayList<Integer>();
-
+	
+	public static int getNonZeroLevel(int[] levels) {
 		int nonZeroLevel;
 		for(nonZeroLevel = 0; nonZeroLevel < levels.length; nonZeroLevel++){
 			if(levels[nonZeroLevel] != 0)
 				break;
 		}
+		return nonZeroLevel;
+	}
+
+	public static ArrayList<Integer> getChaps(int bid, int[] levels) {
+		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		SQLiteDatabase db = dbHandler.getReadableDatabase();
+
+		ArrayList<Integer> chapList = new ArrayList<Integer>();
+
+		int nonZeroLevel = getNonZeroLevel(levels);
 		String sql = "SELECT DISTINCT level" + nonZeroLevel + " FROM "+ TABLE_TEXTS +" " + fullWhere(bid, levels) + " ORDER BY "  + "level" + nonZeroLevel;
 
 		try{
@@ -432,11 +436,7 @@ public class Text implements Parcelable {
 				} while (cursor.moveToNext());
 			}
 		}catch(Exception e){
-			Toast.makeText(MyApp.context, "couldn't find Texts so just showing chap 1",Toast.LENGTH_SHORT).show();
-			//TODO this actually needs a way of getting chap numbers.. Lets think about that for a bit
-			int fakeChaps = 5;
-			for(int i =1;i<fakeChaps;i++)
-				chapList.add(i);
+			chapList = API.getChaps(Book.getTitle(bid),levels);
 			
 		}
 
