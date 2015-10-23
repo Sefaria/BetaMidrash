@@ -26,7 +26,12 @@ public class API {
 	final static String ZERO_COMMENTARY = "&commentary=0";
 	//TODO possibly add reference userID so sefaria can get some user data
 	
+	
+	final static int STATUS_NONE = 0;
+	final static int STATUS_DONE = 1;
+	
 	private String data = "";
+	private int status = STATUS_NONE;
 	private boolean isDone = false;
 	String sefariaData = null;
 	final static int READ_TIMEOUT = 3000;
@@ -34,7 +39,10 @@ public class API {
 	//TODO determine good times
 
 	
-	static protected String fetchData(String urlString){
+	
+	//non-static methods
+	
+	private String fetchData(String urlString){
 		String data = "";
 		try {
 			URL url = new URL(urlString);
@@ -56,14 +64,94 @@ public class API {
 		}
 		return data;
 	}
+	
+	/**
+	 * //add ability to not wait for task (and return  so that api.data can be used later) 
+	 * When looking for data you can call api.getData() which will only return after complete.
+	 * You can also manually check is done with api.isDone(). 
+	 * Then retrieve the data and status with api.getData() and api.getStatus().
+	 * 
+	 * @param url
+	 * @return api;
+	 */
+	public static API getDataFromURLAsync(String url){
+		Log.d("api",url);
+		API api = new API();
+		api.new GetDataTask().execute(url);
+		return api;
+	}
+	
+	/**
+	 * Waits for async task to finish.
+	 * Returns when api.data and api.status is available to use.
+	 */
+	public void waitForComplete(){
+		try {
+			while(!isDone()){
+				//TODO maybe use something smarter to do this - make a timeout just in case
+				Thread.sleep(10);
+			}
+		}catch (InterruptedException e) {
+			e.printStackTrace();
+			isDone = true;
+			//maybe change status
+		}
+	}
+	
+	/**
+	 *  Waits for data from Internet then returns data
+	 * @return data
+	 */
+	public String getData(){
+		waitForComplete();
+		//TODO maybe check status to make sure it's ok
+		return data;
+	}
+	
+	/**
+	 *  Waits for data from Internet then returns status
+	 * @return status
+	 */
+	public int getStatus(){
+		waitForComplete();
+		return status;
+	}
+	
+	/**
+	 * true if it finished it's request from the web and false if it's still getting data.
+	 * @return isDone
+	 */
+	public boolean isDone(){
+		return isDone;
+	}
+	
 
-	static String convertStreamToString(java.io.InputStream is) {
+	private String convertStreamToString(java.io.InputStream is) {
 		java.util.Scanner scanner = new java.util.Scanner(is).useDelimiter("\\A");
 		return scanner.hasNext() ? scanner.next() : "";
 	}
 
+	
+	//static methods
 
-	private static List<Text> parseJSON(String in,int [] levels) {
+	/**
+	 * This function will wait until it gets the data from the Internet to return.
+	 * It is possible that it will take a while if you are asking for lots of data or bad connection.
+	 * Read timeout is {@value #READ_TIMEOUT}ms and connection timeout is {@value #CONNECT_TIMEOUT}ms.
+	 * 
+	 * @param url
+	 * @return data as String from url request
+	 */
+	public static String getDataFromURL(String url){
+		API api = getDataFromURLAsync(url);
+		//creating an instance of api which will fetch data then wait until this is done to return data
+		String data = api.getData();
+		Log.d("api","in getDataFromURL: data length: " + data.length() );
+		return data;
+	}
+	
+	
+	private static List<Text> parseJSON(String in,int [] levels, int bid) {
 		List<Text> textList = new ArrayList<Text>();
 
 		try {
@@ -86,8 +174,10 @@ public class API {
 				Text text = new Text(enText, heText);
 				
 				//Log.d("api", i + text.toString());
+				text.bid = bid;
 				text.levels = levels; //TODO get full level info in there
 				text.levels[0] = text.level1 = i+1;
+				text.level2 = text.levels[1];
 
 				textList.add(text);
 			}			
@@ -99,24 +189,7 @@ public class API {
 
 	}
 
-	//add ability to not wait for task (and return api; so that api.data can be used later) 
-	public static String getDataFromURL(String url){
-		Log.d("api",url);
-		API api = new API();
-		api.new GetDataTask().execute(url);
-		//creating an instance of api which will fetch data then wait until this is done to return data
-		try {
-			while(!api.isDone){
-				//TODO maybe use something smarter to do this - make a timeout just in case
-				Thread.sleep(10);
-			}
-		}catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		String data = api.data;
-		Log.d("api","in getDataFromURL: data length: " + data.length() );
-		return data;
-	}
+	
 	
 	private static List<Text> getSearchResults(String query,int from) {
 		List<Text> texts = new ArrayList<Text>();
@@ -127,7 +200,12 @@ public class API {
 		
 	}
 	
-	
+	/**
+	 * 
+	 * @param bookTitle
+	 * @param levels
+	 * @return chapList (a list of all the chapter numbers)
+	 */
 	public static ArrayList<Integer> getChaps(String bookTitle, int [] levels){
 		String place = bookTitle.replace(" ", "_"); 
 		String url = COUNT_URL + place;
@@ -159,6 +237,12 @@ public class API {
 	}
 	
 	
+	/**
+	 * Will only return after response from web is complete.
+	 * @param bookTitle
+	 * @param levels
+	 * @return textList
+	 */
 	static public List<Text> getTextsFromAPI(String bookTitle, int[] levels){ //(String booktitle, int []levels)
 		String place = bookTitle.replace(" ", "_"); //the api call doesn't have spaces
 		for(int i= levels.length-1;i>=0;i--){
@@ -169,25 +253,18 @@ public class API {
 		}
 		String completeUrl = TEXT_URL + place + "?" + ZERO_CONTEXT + ZERO_COMMENTARY;
 		String data = getDataFromURL(completeUrl);
-		List<Text> textList = parseJSON(data,levels);
+		List<Text> textList = parseJSON(data,levels,Book.getBid(bookTitle));
 		Log.d("api", "in getTextsFromAPI: api.textlist.size:" + textList.size());
 		return textList;
 	}
-	//Sefaria levels:
-	// booktitle.biggestlevel.smaller.smallest
-	//Genesis.perek.pasuk
-	//level1 = smallest //pasuk
-	//level2 = bigger //perek 
-	//[5,1]
-	//[0,1] -- the whole perek
-	//[0,1,2] -- mistake in Chumash
-	//[0,0] 
 
 	private class GetDataTask extends AsyncTask <String, Void, String> {
 		@Override
 		protected String doInBackground(String... params) {
 			String result = fetchData(params[0]);
 			data = result;//put into data so that the static function can pull the data
+			if(status == STATUS_NONE)
+				status = STATUS_DONE;
 			isDone = true; 
 			return result;
 		}

@@ -37,7 +37,7 @@ public class Text implements Parcelable {
 		this.enText = enText;
 		this.heText = heText;
 		this.tid = 0;
-		this.bid = 0;
+		this.bid = bid;
 		levels = new int [] {0,0,0,0,0,0};
 		this.displayNum = true;//unless we know otherwise, we'll default to display the verse Number
 	}
