@@ -45,14 +45,26 @@ public class Text implements Parcelable {
 	public Text(int tid) {
 		Database2 dbHandler = Database2.getInstance(MyApp.context);
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
-		Cursor cursor = db.query(TABLE_TEXTS, null, "_id" + "=?",
-				new String[] { String.valueOf(tid) }, null, null, null, null);
 
-		if (cursor != null && cursor.moveToFirst()){
-			getFromCursor(cursor);
-		}
-		else
-			tid = 0;
+		try{
+			Cursor cursor = db.query(TABLE_TEXTS, null, "_id" + "=?",
+					new String[] { String.valueOf(tid) }, null, null, null, null);
+
+			if (cursor != null && cursor.moveToFirst()){
+				getFromCursor(cursor);
+			}
+			else{
+				this.tid = 0;
+				this.levels = new int [] {0,0,0,0,0,0};
+			}
+		}catch(SQLiteException e){
+			if(!e.toString().contains(API.NO_TEXT_MESSAGE)){
+				throw e; //don't know what the problem is so throw it back out
+			}
+			//This probably means that it's the API database
+			this.tid = 0;
+			this.levels = new int [] {0,0,0,0,0,0};
+		}	
 	}
 
 	public static final int MAX_LEVELS = 6;
@@ -121,7 +133,7 @@ public class Text implements Parcelable {
 
 
 
-	public static List<Text> getAll() {
+	private static List<Text> getAll() {
 		Database2 dbHandler = Database2.getInstance(MyApp.context);
 		List<Text> textList = new ArrayList<Text>();
 		// Select All Query
@@ -156,7 +168,7 @@ public class Text implements Parcelable {
 	}
 
 	//TODO remove this function...
-	public static List<Text> getAllTextsFromDB2() {
+	private static List<Text> getAllTextsFromDB2() {
 		Database2 dbHandler = new Database2(MyApp.context);
 		List<Text> textList = new ArrayList<Text>();
 		// Select All Query
@@ -181,7 +193,7 @@ public class Text implements Parcelable {
 	}
 
 
-	public static int max(int bid, int[] levels) {
+	private static int max(int bid, int[] levels) {
 
 		Database2 dbHandler = Database2.getInstance(MyApp.context);
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
@@ -246,14 +258,10 @@ public class Text implements Parcelable {
 		try {
 			getFromDB(bid,levels);
 		}catch(SQLiteException e){
-			if(!e.toString().contains("no such table: Texts")){
+			if(!e.toString().contains(API.NO_TEXT_MESSAGE)){
 				throw e; //don't know what the problem is so throw it back out
 			}
-			Log.d("api", "Getting text: " + e.toString());
-
-			//API api = new API();
 			textList = API.getTextsFromAPI(Book.getTitle(bid), levels);
-			Log.d("api","in TEXT textList:" + + textList.size());
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -406,7 +414,7 @@ public class Text implements Parcelable {
 		db.update(TABLE_TEXTS, values,Kbid+ "=?", new String [] {String.valueOf(Book.getBid(title))});
 		Log.d("sql_removed_lang", title + " removed " + lang);
 	}
-	
+
 	public static int getNonZeroLevel(int[] levels) {
 		int nonZeroLevel;
 		for(nonZeroLevel = 0; nonZeroLevel < levels.length; nonZeroLevel++){
@@ -437,7 +445,7 @@ public class Text implements Parcelable {
 			}
 		}catch(Exception e){
 			chapList = API.getChaps(Book.getTitle(bid),levels);
-			
+
 		}
 
 		/*//LOGING:

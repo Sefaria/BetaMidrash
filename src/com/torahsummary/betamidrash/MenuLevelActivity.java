@@ -109,6 +109,15 @@ public class MenuLevelActivity extends ListActivity {
 			AppMenu.inited = false; //force a reinit
 		}
 		settings = getSharedPreferences("appSettings", Context.MODE_PRIVATE);
+		
+		if(!Database2.checkDataBase())
+			Database2.createAPIdb();
+		if(!CacheDB.checkDataBase()){
+			CacheDB cacheDB = new CacheDB(this);
+			CacheDB.add();
+			
+		}
+		
 		if (!AppMenu.inited) { //you just started the app
 
 
@@ -139,6 +148,7 @@ public class MenuLevelActivity extends ListActivity {
 			}
 
 			int versionNum = settings.getInt("versionNum", -1);
+			
 
 
 			if (Downloader.getNetworkStatus() != Downloader.NO_INTERNET) {

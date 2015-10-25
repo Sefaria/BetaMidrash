@@ -14,6 +14,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -24,6 +27,8 @@ public class API {
 	final static String SEARCH_URL = "http://search.sefaria.org:788/sefaria/_search/";
 	final static String ZERO_CONTEXT = "&context=0";
 	final static String ZERO_COMMENTARY = "&commentary=0";
+	
+	public final static String NO_TEXT_MESSAGE = "no such table: Texts";
 	//TODO possibly add reference userID so sefaria can get some user data
 	
 	
@@ -156,7 +161,7 @@ public class API {
 
 		try {
 			JSONObject jsonData = new JSONObject(in);
-			Log.d("api", "jsonData:" + jsonData.toString());
+			//Log.d("api", "jsonData:" + jsonData.toString());
 			
 			//TODO make work for 1 and 3 (or more) levels of depth (exs. Hadran, Arbaah Turim)
 			JSONArray textArray = jsonData.getJSONArray("text");
@@ -164,20 +169,30 @@ public class API {
 			
 			
 			int maxLength = Math.max(textArray.length(),heArray.length());
-			Log.d("api",textArray.toString() + " " + heArray.toString());
+			//Log.d("api",textArray.toString() + " " + heArray.toString());
 			for (int i = 0; i < maxLength; i++) {
 				//get the texts if i is less it's within the length (otherwise use "") 
 				String enText = "";
-				enText = textArray.getString(i);
+				try{
+					enText = textArray.getString(i);
+				}catch(JSONException e){
+					Log.d("api",e.toString());
+				}
 				String heText = "";
-				heText = heArray.getString(i);
+				try{
+					heText = heArray.getString(i);
+				}catch(JSONException e){
+					Log.d("api",e.toString());
+				}
 				Text text = new Text(enText, heText);
-				
-				//Log.d("api", i + text.toString());
+			
 				text.bid = bid;
-				text.levels = levels; //TODO get full level info in there
+				for(int j=0;j<levels.length;j++){
+					text.levels[j] = levels[j]; //TODO get full level info in there
+				}
 				text.levels[0] = text.level1 = i+1;
 				text.level2 = text.levels[1];
+				
 
 				textList.add(text);
 			}			
@@ -189,6 +204,22 @@ public class API {
 
 	}
 
+	/**
+	 * 
+	 * @return false if there's a Text table in the db. true if not (and should be using API)
+	 */
+	public static boolean useAPI(){
+		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		SQLiteDatabase db = dbHandler.getReadableDatabase();
+
+		try{
+			Cursor cursor = db.query(Text.TABLE_TEXTS, null, "_id" + "=?",
+					new String[] { String.valueOf(1) }, null, null, null, null);
+			return false;
+		}catch(SQLiteException e){
+			return true;
+		}
+	}
 	
 	
 	private static List<Text> getSearchResults(String query,int from) {
@@ -198,6 +229,27 @@ public class API {
 		//TODO make working function
 		return texts;
 		
+	}
+	
+	
+	/**
+	 * Get links that are tied to the whole chapter, but not to a specific verse.
+	 * @param dummyChapText
+	 * @param limit
+	 * @param offset
+	 * @return
+	 */
+	public static List<Text> getChapLinks(Text dummyChapText, int limit, int offset) {
+		List<Text> texts = new ArrayList<Text>();
+		
+		return texts;
+
+	}
+	
+	public static List<Text> getLinks(Text text, int limit, int offset) {
+		List<Text> texts = new ArrayList<Text>();
+		
+		return texts;
 	}
 	
 	/**
@@ -245,6 +297,7 @@ public class API {
 	 */
 	static public List<Text> getTextsFromAPI(String bookTitle, int[] levels){ //(String booktitle, int []levels)
 		String place = bookTitle.replace(" ", "_"); //the api call doesn't have spaces
+		
 		for(int i= levels.length-1;i>=0;i--){
 			//TODO error check on bad input (like [1,0,1] which doesn't make any sense)
 			if(levels[i]== 0)
@@ -254,7 +307,11 @@ public class API {
 		String completeUrl = TEXT_URL + place + "?" + ZERO_CONTEXT + ZERO_COMMENTARY;
 		String data = getDataFromURL(completeUrl);
 		List<Text> textList = parseJSON(data,levels,Book.getBid(bookTitle));
-		Log.d("api", "in getTextsFromAPI: api.textlist.size:" + textList.size());
+		for(int i=0;i<levels.length;i++)
+			Log.d("api", "in getTextsFromAPI: levels" + i + ". "  + levels[i] );
+
+		//Log.d("api", "in getTextsFromAPI: api.textlist:" + textList.toString());
+		
 		return textList;
 	}
 

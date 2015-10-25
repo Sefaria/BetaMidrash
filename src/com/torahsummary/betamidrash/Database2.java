@@ -86,7 +86,7 @@ public class Database2 extends SQLiteOpenHelper{
 		return sInstance;
 	}
 
-	private boolean checkDataBase(){
+	public static boolean checkDataBase(){
 
 		SQLiteDatabase checkDB = null;
 
@@ -101,9 +101,7 @@ public class Database2 extends SQLiteOpenHelper{
 		}
 
 		if(checkDB != null){
-
 			checkDB.close();
-
 		}
 
 		return checkDB != null ? true : false;
@@ -151,47 +149,61 @@ public class Database2 extends SQLiteOpenHelper{
 
 
 	}
+	
+	public static void createAPIdb(){
+		Database2 myDbHelper = new Database2(MyApp.currActivityContext);
+		Log.d("api", "trying to create db");
+		myDbHelper.getReadableDatabase();
+		try {
+			myDbHelper.unzipDatabase("UpdateForSefariaMobileDatabase.zip.jar", Database2.DB_PATH,true);
+		} catch (IOException e) {
+			Log.e("api",e.toString());
+		}
+	}
 
-	public void unzipDatabase(String oldPath, String newPath) throws IOException
+	public  void unzipDatabase(String oldPath, String newPath, boolean fromAssets) throws IOException
 	{     
 		Log.d("zip","let's unzip this bad boy...");
 		InputStream is;
 		ZipInputStream zis;
-			String filename;
-			is =  new FileInputStream(new File(oldPath));  //myContext.getAssets().open(name);
-			zis = new ZipInputStream(is);          
-			ZipEntry ze;
-			byte[] buffer = new byte[1024];
-			int count;
+		String filename;
+		if(fromAssets)
+			is = myContext.getAssets().open(oldPath);
+		else
+			is =  new FileInputStream(new File(oldPath));
+		zis = new ZipInputStream(is);          
+		ZipEntry ze;
+		byte[] buffer = new byte[1024];
+		int count;
 
-			while ((ze = zis.getNextEntry()) != null) 
-			{
-				// zapis do souboru - Czech for "write to a file"
-				filename = ze.getName();
+		while ((ze = zis.getNextEntry()) != null) 
+		{
+			// zapis do souboru - Czech for "write to a file"
+			filename = ze.getName();
 
-				// Need to create directories if not exists, or
-				// it will generate an Exception...
-				if (ze.isDirectory()) {
-					//Log.d("yo",newPath + filename);
-					File fmd = new File(newPath + filename);
-					fmd.mkdirs();
-					continue;
-				}
-
-				OutputStream fout = new FileOutputStream(newPath + filename);
-
-				// cteni zipu a zapis - Czech for "reading and writing zip"
-				while ((count = zis.read(buffer)) != -1) 
-				{
-					fout.write(buffer, 0, count);             
-				}
-				
-				fout.flush();
-				fout.close();               
-				zis.closeEntry();
+			// Need to create directories if not exists, or
+			// it will generate an Exception...
+			if (ze.isDirectory()) {
+				//Log.d("yo",newPath + filename);
+				File fmd = new File(newPath + filename);
+				fmd.mkdirs();
+				continue;
 			}
 
-			zis.close();
+			OutputStream fout = new FileOutputStream(newPath + filename);
+
+			// cteni zipu a zapis - Czech for "reading and writing zip"
+			while ((count = zis.read(buffer)) != -1) 
+			{
+				fout.write(buffer, 0, count);             
+			}
+			
+			fout.flush();
+			fout.close();               
+			zis.closeEntry();
+		}
+
+		zis.close();
 	}
 	
 	public static int getVersion(){
