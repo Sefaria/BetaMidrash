@@ -219,7 +219,7 @@ public class VerseAdapter extends ArrayAdapter<Text> {
 			else hebText = Util.getRemovedNikudString(verse.heText);
 
 			if (hebText == "") hebText = "\u05D0\u05D9\u05DF \u05E7\u05D8\u05E2 \u05D1\u05E2\u05D1\u05E8\u05D9\u05EA";
-			if (verse.level1 == -1) Log.d("-1","sadface");
+			if (verse.levels[0] == -1) Log.d("-1","sadface");
 			htv.setText(Html.fromHtml(getVerseNum(verse,true) + hebText));
 		} else {
 
@@ -617,14 +617,14 @@ public class VerseAdapter extends ArrayAdapter<Text> {
 				verseLoc += book.heSectionNamesL2B[i] + " " + Util.int2heb(verse.levels[i]);
 				verseLoc += ", ";
 			}
-			verseLoc += Util.int2heb(verse.level1);
+			verseLoc += Util.int2heb(verse.levels[0]);
 			return "<b>" +  verseLoc + ": </b> ";
 		} else {
 			for (int i = 1; i < book.wherePage-1; i++) {
 				verseLoc += book.sectionNamesL2B[i] + " " + verse.levels[i];
 				verseLoc += ", ";
 			}
-			verseLoc += verse.level1;
+			verseLoc += verse.levels[0];
 			return "<b>" + verseLoc + ": </b> ";
 		}
 

@@ -101,39 +101,32 @@ public class Link implements Parcelable {
 	}
 
 	private static String makeWhereStatement(Text text){
-		return " L." + Kbida + "=" + text.bid 
-				+ addLevelWhere(Klevel1a, text.level1,"L") 
-				+ addLevelWhere(Klevel2a, text.level2,"L")
-				+ addLevelWhere(Klevel3a, text.level3,"L")
-				+ addLevelWhere(Klevel4a, text.level4,"L")
-				+ addLevelWhere(Klevel5a, text.level5,"L")
-				+ addLevelWhere(Klevel6a, text.level6,"L")
-				+ " AND    L.bidb=T.bid "
-				+ " AND (T." + Text.Klevel1 + "=L." + Klevel1b + ")"// + " OR L." + Klevel1b + "=0)"
-				+ " AND (T." + Text.Klevel2 + "=L." + Klevel2b + ")"//+ " OR L." + Klevel2b + "=0)"
-				+ " AND (T." + Text.Klevel3 + "=L." + Klevel3b + ")"//+ " OR L." + Klevel3b + "=0)"
-				+ " AND (T." + Text.Klevel4 + "=L." + Klevel4b + ")"//+ " OR L." + Klevel4b + "=0)"
-				+ " AND (T." + Text.Klevel5 + "=L." + Klevel5b + ")"//+ " OR L." + Klevel5b + "=0)"
-				+ " AND (T." + Text.Klevel6 + "=L." + Klevel6b + ")"//+ " OR L." + Klevel6b + "=0)"
-				;
+		String str = " L." + Kbida + "=" + text.bid;
+			for(int i=0;i<text.levels.length;i++)
+				str += addLevelWhere(Klevel1a, text.levels[0],"L");
+		str += " AND    L.bidb=T.bid "
+			+ " AND (T." + Text.Klevel1 + "=L." + Klevel1b + ")"// + " OR L." + Klevel1b + "=0)"
+			+ " AND (T." + Text.Klevel2 + "=L." + Klevel2b + ")"//+ " OR L." + Klevel2b + "=0)"
+			+ " AND (T." + Text.Klevel3 + "=L." + Klevel3b + ")"//+ " OR L." + Klevel3b + "=0)"
+			+ " AND (T." + Text.Klevel4 + "=L." + Klevel4b + ")"//+ " OR L." + Klevel4b + "=0)"
+			+ " AND (T." + Text.Klevel5 + "=L." + Klevel5b + ")"//+ " OR L." + Klevel5b + "=0)"
+			+ " AND (T." + Text.Klevel6 + "=L." + Klevel6b + ")"//+ " OR L." + Klevel6b + "=0)"
+			;
+		return str;
 	}
 
 	private static String makeWhereStatement2(Text text){
-		return " L2." + Kbidb + "=" + text.bid 
-				+ addLevelWhere(Klevel1b, text.level1, "L2") 
-				+ addLevelWhere(Klevel2b, text.level2, "L2")
-				+ addLevelWhere(Klevel3b, text.level3, "L2")
-				+ addLevelWhere(Klevel4b, text.level4, "L2")
-				+ addLevelWhere(Klevel5b, text.level5, "L2")
-				+ addLevelWhere(Klevel6b, text.level6, "L2")
-				+ " AND    L2.bida=T3.bid "
-				+ " AND (T3." + Text.Klevel1 + "=L2." + Klevel1a + ")"//+ " OR L2." + Klevel1a + "=0)"
-				+ " AND (T3." + Text.Klevel2 + "=L2." + Klevel2a + ")"//+ " OR L2." + Klevel2a + "=0)"
-				+ " AND (T3." + Text.Klevel3 + "=L2." + Klevel3a + ")"//+ " OR L2." + Klevel3a + "=0)"
-				+ " AND (T3." + Text.Klevel4 + "=L2." + Klevel4a + ")"//+ " OR L2." + Klevel4a + "=0)"
-				+ " AND (T3." + Text.Klevel5 + "=L2." + Klevel5a + ")"//+ " OR L2." + Klevel5a + "=0)"
-				+ " AND (T3." + Text.Klevel6 + "=L2." + Klevel6a + ")" ; //+ " OR L2." + Klevel6a + "=0)";
-
+		String str = " L2." + Kbidb + "=" + text.bid ;
+		for(int i=0;i<text.levels.length;i++)
+			str += addLevelWhere(Klevel1b, text.levels[i], "L2");
+		str += " AND    L2.bida=T3.bid "
+		+ " AND (T3." + Text.Klevel1 + "=L2." + Klevel1a + ")"//+ " OR L2." + Klevel1a + "=0)"
+		+ " AND (T3." + Text.Klevel2 + "=L2." + Klevel2a + ")"//+ " OR L2." + Klevel2a + "=0)"
+		+ " AND (T3." + Text.Klevel3 + "=L2." + Klevel3a + ")"//+ " OR L2." + Klevel3a + "=0)"
+		+ " AND (T3." + Text.Klevel4 + "=L2." + Klevel4a + ")"//+ " OR L2." + Klevel4a + "=0)"
+		+ " AND (T3." + Text.Klevel5 + "=L2." + Klevel5a + ")"//+ " OR L2." + Klevel5a + "=0)"
+		+ " AND (T3." + Text.Klevel6 + "=L2." + Klevel6a + ")" ; //+ " OR L2." + Klevel6a + "=0)";
+		return str;
 	}
 
 	static List<Pair<String, Integer>> getCountsTitles(Text text){

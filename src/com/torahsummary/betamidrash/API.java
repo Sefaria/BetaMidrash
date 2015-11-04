@@ -228,8 +228,7 @@ public class API {
 				for(int j=0;j<levels.length;j++){
 					text.levels[j] = levels[j]; //TODO get full level info in there
 				}
-				text.levels[0] = text.level1 = i+1;
-				text.level2 = text.levels[1];
+				text.levels[0] = i+1;
 				
 
 				textList.add(text);
@@ -283,8 +282,8 @@ public class API {
 				else //lang is en
 					text = new Text(content,"");
 				text.bid = 2; //TODO this needs more real info
-				text.levels[0] = text.level1 = 1;
-				text.levels[1] = text.level2 = 1;
+				text.levels[0] = 1;
+				text.levels[1] = 1;
 				//z2Log.d("api",text.toString());
 				texts.add(text);
 			}

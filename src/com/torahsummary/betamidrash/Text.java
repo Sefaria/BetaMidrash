@@ -97,12 +97,6 @@ public class Text implements Parcelable {
 	public int bid;
 	public String enText;
 	public String heText;
-	public int level1;
-	public int level2;
-	public int level3;
-	public int level4;
-	public int level5;
-	public int level6;
 	public int [] levels;
 	//public int hid;
 	public boolean displayNum;
@@ -114,12 +108,9 @@ public class Text implements Parcelable {
 		bid = cursor.getInt(1);
 		enText = cursor.getString(2);
 		heText = cursor.getString(3);
-		level1 = cursor.getInt(4);
-		level2 = cursor.getInt(5);
-		level3 = cursor.getInt(6);
-		level4 = cursor.getInt(7);
-		level5 = cursor.getInt(8);
-		level6 = cursor.getInt(9);
+		levels = new int []{0,0,0,0,0,0};
+		for(int i=0;i<10;i++)
+			levels[i -4] = cursor.getInt(i); 
 		displayNum = (cursor.getInt(10) != 0);
 
 
@@ -127,8 +118,6 @@ public class Text implements Parcelable {
 			enText = "";
 		if(heText == null)
 			heText = "";
-
-		levels = new int [] {level1, level2, level3,level4, level5, level6};
 
 
 	}	
@@ -304,18 +293,10 @@ public class Text implements Parcelable {
 		Text dummyChapText = deepCopy(text);
 		//dummyChapText.log();
 
-		if(wherePage > 1) //I really should have used arrays (that was dumb).
-			dummyChapText.level1 = -1;
-		if(wherePage > 2)
-			dummyChapText.level2 = -1;
-		if(wherePage > 3)
-			dummyChapText.level3 = -1;
-		if(wherePage > 4)
-			dummyChapText.level4 = -1;
-		if(wherePage > 5)
-			dummyChapText.level5 = -1;
-		if(wherePage > 6)
-			dummyChapText.level6 = -1;
+		for(int i=0;i<6;i++){
+			if(wherePage > i+1)
+				dummyChapText.levels[i] = -1;
+		}
 
 		//TODO check that it's correct to use ">" for all types of where pages.
 		Log.d("sql_dummytext", "wherePage: " + wherePage);
@@ -329,18 +310,10 @@ public class Text implements Parcelable {
 		Text dummyChapText = deepCopy(text);
 		//dummyChapText.log();
 
-		if(wherePage > 1) //I really should have used arrays (that was dumb).
-			dummyChapText.level1 = 0;
-		if(wherePage > 2)
-			dummyChapText.level2 = 0;
-		if(wherePage > 3)
-			dummyChapText.level3 = 0;
-		if(wherePage > 4)
-			dummyChapText.level4 = 0;
-		if(wherePage > 5)
-			dummyChapText.level5 = 0;
-		if(wherePage > 6)
-			dummyChapText.level6 = 0;
+		for(int i=0;i<6;i++){
+			if(wherePage > i+1)
+				dummyChapText.levels[i] = 0;
+		}
 
 		//TODO check that it's correct to use ">" for all types of where pages.
 		Log.d("sql_dummytext", "wherePage: " + wherePage);
@@ -498,10 +471,9 @@ public class Text implements Parcelable {
 		return orderBy;
 	}
 
+	
 	public void log() {
-		Log.d("sql-TEXTS", /*Ktid + ": " + tid + */" " + Kbid + ": " + bid + " " + "level: "  + level6 + "." + level5 + "." +level4 + "." + level3 + "."+ level2 + "." + level1 + " "+ KenText + ": " + enText + " " + KheText + ": " + heText); 
-
-
+		Log.d("text", toString());
 	}
 
 	private static String convertLangToLangText(String lang){
@@ -729,12 +701,6 @@ public class Text implements Parcelable {
 		newText.bid = text.bid;
 		newText.enText = text.enText;
 		newText.heText = text.heText;
-		newText.level1 = text.level1;
-		newText.level2 = text.level2;
-		newText.level3 = text.level3;
-		newText.level4 = text.level4;
-		newText.level5 = text.level5;
-		newText.level6 = text.level6;
 		newText.levels = text.levels.clone();
 		newText.tid    = text.tid;
 		newText.displayNum = text.displayNum;
@@ -775,12 +741,6 @@ public class Text implements Parcelable {
 		dest.writeInt(bid);
 		dest.writeString(enText);
 		dest.writeString(heText);
-		dest.writeInt(level1);
-		dest.writeInt(level2);
-		dest.writeInt(level3);
-		dest.writeInt(level4);
-		dest.writeInt(level5);
-		dest.writeInt(level6);
 		dest.writeIntArray(levels);
 		dest.writeInt(displayNum ? 1 : 0);		
 	}
@@ -790,12 +750,6 @@ public class Text implements Parcelable {
 		bid = in.readInt();
 		enText = in.readString();
 		heText = in.readString();
-		level1 = in.readInt();
-		level2 = in.readInt();
-		level3 = in.readInt();
-		level4 = in.readInt();
-		level5 = in.readInt();
-		level6 = in.readInt();
 		levels = in.createIntArray();
 		displayNum = in.readInt() != 0;
 	}
