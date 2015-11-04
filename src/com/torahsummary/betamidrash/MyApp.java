@@ -2,6 +2,8 @@ package com.torahsummary.betamidrash;
 
 
 
+import java.io.File;
+
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -14,6 +16,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
+import android.os.Environment;
 import android.widget.Toast;
 
 
@@ -44,6 +47,43 @@ public class MyApp extends Application {
 		getTracker();
 	}
 	
+	
+	/* Checks if external storage is available for read and write */
+	public static boolean isExternalStorageWritable() {
+	    String state = Environment.getExternalStorageState();
+	    if (Environment.MEDIA_MOUNTED.equals(state)) {
+	        return true;
+	    }
+	    return false;
+	}
+
+	/* Checks if external storage is available to at least read */
+	public static boolean isExternalStorageReadable() {
+	    String state = Environment.getExternalStorageState();
+	    if (Environment.MEDIA_MOUNTED.equals(state) ||
+	        Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+	        return true;
+	    }
+	    return false;
+	}
+	
+	public static String getStorageLocation(String dbName){
+		String oldDBPath = MyApp.INTERNAL_FOLDER + "databases/" ;
+		String oldPath = oldDBPath + dbName;
+		String tempLocation = oldDBPath;//so that people who had the db b/f the current version can still use it
+		File file = new File(oldPath);
+		if(isExternalStorageReadable() && isExternalStorageWritable() && !file.exists()){
+			tempLocation = Environment.getExternalStorageDirectory().getPath() +"/"; //the use the new external path
+			tempLocation += "Android/data/" + appPackageName + "/";
+		}
+		
+		//Log.d("db", tempLocation);
+		//Toast.makeText(MyApp.context,"1: "+ tempLocation, Toast.LENGTH_LONG).show();
+		
+		return tempLocation;
+		
+		
+	}
 	public static void killSwitch(){
 		Toast.makeText(MyApp.context, MyApp.context.getString(R.string.kill_switch_message), Toast.LENGTH_LONG).show();
 		SharedPreferences settings = context.getSharedPreferences("appSettings", Context.MODE_PRIVATE);

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import com.torahsummary.betamidrash.API.APIException;
 import com.torahsummary.betamidrash.R;
 
 import android.app.ListActivity;
@@ -123,7 +124,12 @@ public class TextActivity extends ListActivity {
 
 
 
-		chapList = Text.getChaps(bid, tempLevels);
+		try {
+			chapList = Text.getChaps(bid, tempLevels);
+		} catch (APIException e) {
+			chapList = new ArrayList<Integer>();
+			Toast.makeText(this,R.string.apiexception, Toast.LENGTH_SHORT).show();
+		}
 		//Log.d("sup",chapList.toString());
 		int currChap = levels[currLevel];
 		Log.d("where","currChap: " + currChap);
@@ -143,7 +149,13 @@ public class TextActivity extends ListActivity {
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		//Log.d("lv",Arrays.toString(levels));
-		List<Text> textsList = Text.get(bid,levels);
+		List<Text> textsList;
+		try {
+			textsList = Text.get(bid,levels);
+		} catch (APIException e) {
+			textsList = new ArrayList<Text>();
+			Toast.makeText(this,R.string.apiexception, Toast.LENGTH_SHORT).show();
+		}
 		//int sum = 0;
 		//for (int i = 0; i < yo.size(); i++) {
 		//List<Text> tempLinks = Link.getLinkedTexts(yo.get(i), -1, 0);
@@ -172,7 +184,13 @@ public class TextActivity extends ListActivity {
 		//if you came here from a link, scroll to position that was linked to
 		int linkedVerse = intent.getIntExtra("linkedVerse", 0);
 		if (linkedVerse != 0) {
-			List<Integer> tempVerses = Text.getChaps(bid, levels);
+			List<Integer> tempVerses = new ArrayList<Integer>(); 
+			try {
+				tempVerses = Text.getChaps(bid, levels);
+			} catch (APIException e) {
+				// TODO Auto-generated catch block
+				Toast.makeText(this,R.string.apiexception, Toast.LENGTH_SHORT).show();
+			}
 			int versePos = tempVerses.indexOf(linkedVerse);
 			getListView().setSelection(versePos);
 		}
@@ -398,7 +416,12 @@ public class TextActivity extends ListActivity {
 					levels[currLevel] = chapList.get(chapPos);
 					title = getCurrTitleString(levels, adapter.book, true);
 					setTextTitle(title);//getCurrTitleString(levels, adapter.book));
-					List<Text> newTexts = Text.get(bid,levels);
+					List<Text> newTexts = new ArrayList<Text>(); 
+					try {
+						newTexts = Text.get(bid,levels);
+					} catch (APIException e) {
+						Toast.makeText(this,R.string.apiexception, Toast.LENGTH_SHORT).show();
+					}
 					adapter.changeChap(newTexts);
 					adapter.changeLang(Text.getMaxLang(newTexts,adapter.currLang));
 					isBookmarked = bookmarkSettings.getBoolean(getCurrBookmarkString(levels,bookTitle), false);
@@ -420,7 +443,12 @@ public class TextActivity extends ListActivity {
 					title = getCurrTitleString(levels, adapter.book, true);
 					setTextTitle(title);//getCurrTitleString(levels, adapter.book));
 
-					List<Text> newTexts = Text.get(bid, levels);
+					List<Text> newTexts = new ArrayList<Text>();
+					try {
+						newTexts = Text.get(bid, levels);
+					} catch (APIException e) {
+						Toast.makeText(this,R.string.apiexception, Toast.LENGTH_SHORT).show();
+					}
 					adapter.changeChap(newTexts);
 					adapter.changeLang(Text.getMaxLang(newTexts,adapter.currLang));
 					isBookmarked = bookmarkSettings.getBoolean(getCurrBookmarkString(levels,bookTitle), false);
@@ -515,7 +543,12 @@ public class TextActivity extends ListActivity {
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(sv.getWindowToken(), 0);
 		menu.findItem(R.id.action_findonpage).collapseActionView();
-		List<Text> newVerses = Text.get(adapter.book, levels);
+		List<Text> newVerses = new ArrayList<Text>();
+		try {
+			newVerses = Text.get(adapter.book, levels);
+		} catch (APIException e) {
+			Toast.makeText(this,R.string.apiexception, Toast.LENGTH_SHORT).show();
+		}
 		adapter.texts = newVerses;
 		adapter.clear();
 		for (Text text:newVerses) {
@@ -678,7 +711,13 @@ public class TextActivity extends ListActivity {
 
 		@Override
 		public boolean onQueryTextSubmit(String query) {
-			adapter.texts = Text.get(bid,levels);
+			try {
+				adapter.texts = Text.get(bid,levels);
+			} catch (APIException e) {
+				Log.e("api", "APIException");
+				adapter.texts = new ArrayList<Text>();
+				Toast.makeText(MyApp.currActivityContext,R.string.apiexception, Toast.LENGTH_SHORT).show();
+			}
 			MyApp.sendEvent("FindOnPage",query);
 			listOfQueryFinds = Searching.findWordsInList(adapter.texts, query, false, false);
 

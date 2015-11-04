@@ -8,6 +8,8 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.torahsummary.betamidrash.API.APIException;
+
 //import com.google.android.gms.drive.internal.ar;
 
 import android.database.Cursor;
@@ -30,7 +32,8 @@ public class Searching {
 	public static boolean doneSearching;
 	public static volatile boolean interrupted;
 	private static final long WAITING_TIME = 2*1000; //2 seconds
-
+	private static int APIStart = 0;
+	
 	public static void init() {
 		currChunkIndex = -1;
 		searchableTids = null;
@@ -441,7 +444,23 @@ public class Searching {
 		//Log.d("bid", "finished createTidList");
 		return tidMinMax;//it was doing stuff on the local tidList 
 	}
-	public static ArrayList<Text> searchDBheTexts(String query, String[] filterArray) throws InterruptedException {
+	
+	
+	private static ArrayList<Text> APISearch(String query, String[] filterArray) throws APIException{
+		int offset = 10;
+		ArrayList<Text> resultsList =  API.getSearchResults(query, filterArray, APIStart,offset);
+		APIStart += offset;
+		if(resultsList.size() == 0)
+			doneSearching = true;
+		return resultsList;
+	}
+	
+	public static ArrayList<Text> searchDBheTexts(String query, String[] filterArray) throws InterruptedException, APIException {
+		if(API.useAPI()){
+			return APISearch(query, filterArray);
+		}
+		
+		
 		int startingChunk = currChunkIndex;
 		ArrayList<Text> resultsList = new ArrayList<Text>();
 		int endSearchingLoop;
@@ -530,7 +549,6 @@ public class Searching {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			MyApp.sendException(e, "DB_search");
-			//e.printStackTrace();
 		}
 
 		if (resultsList.size() == 0) doneSearching = true;
@@ -538,7 +556,11 @@ public class Searching {
 		return resultsList;
 	}
 
-	public static ArrayList<Text> searchEnTexts(String word, String [] filterArray) {
+	public static ArrayList<Text> searchEnTexts(String word, String [] filterArray) throws APIException {
+		if(API.useAPI()){
+			return APISearch(word, filterArray);
+		}
+		
 		Database2 dbHandler = Database2.getInstance(MyApp.context);
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 		int lastTID = currChunkIndex;

@@ -18,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
+import android.widget.Toast;
 
 public class FilterLinksActivity extends Activity {
 
@@ -53,9 +54,16 @@ public class FilterLinksActivity extends Activity {
 		Intent intent = getIntent();
 		int tid = intent.getIntExtra("dummyText", -1);
 		tidMax = intent.getIntExtra("tidMax", -1);
-		dummyText = new Text(tid);
-		findViewById(R.id.content).setVisibility(View.GONE);
-		initStart();
+		
+		if(API.useAPI()){
+			//TODO make this work
+			Toast.makeText(this, "Not an option without full Library", Toast.LENGTH_SHORT).show();
+		}else{
+			dummyText = new Text(tid);
+			initStart();
+			findViewById(R.id.content).setVisibility(View.GONE);
+		}
+
 
 	}
 	@Override

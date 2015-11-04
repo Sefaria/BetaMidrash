@@ -11,9 +11,12 @@ import android.database.SQLException;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.torahsummary.betamidrash.API.APIException;
 
 //this class saves menu data and keeps track of menu history
 public class AppMenu {
@@ -79,6 +82,11 @@ public class AppMenu {
 			else{
 				menuRoot = m.readTree(context.getResources().getAssets().open(JSONMenuPath));
 			}
+		/*try {
+			File indexFile = new File(MyApp.INTERNAL_FOLDER + "/" + JSONMenuPath);
+			if(indexFile.exists()) {    
+				menuRoot = m.readTree("http://www.sefaria.org/api/index");
+				Log.d("API TEST", "Success");*/
 
 			currNodeArray = menuRoot;
 			
@@ -89,9 +97,11 @@ public class AppMenu {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			MyApp.sendException(e);
+			//Log.d("API TEST", "failed: JSON processing exception");
 			return new String[0];
 		} catch (IOException e) {
 			MyApp.sendException(e);
+			//Log.d("APT TEST", "failed: IO Exception");
 			e.printStackTrace();
 			return new String[0];
 		}
@@ -311,8 +321,16 @@ public class AppMenu {
 	//prevLvls is an array of the previous lvls in the text structure
 	static String[] getNamesOfChildren(int lvlNum){ //, int[] prevLvls) {
 		//List<Integer> numInLvl = Text.getChaps(currBook.bid, getLevels());
-		currChaps = Header.getHeaderChaps(currBook, getLevels());
-		currChapInts = Text.getChaps(currBook.bid, getLevels());
+		
+		try {
+			currChaps = Header.getHeaderChaps(currBook, getLevels());
+			currChapInts = Text.getChaps(currBook.bid, getLevels());
+		} catch (APIException e) {
+			currChaps = new ArrayList<Header>();
+			currChapInts = new ArrayList<Integer>();
+			Toast.makeText(MyApp.currActivityContext,R.string.apiexception, Toast.LENGTH_SHORT).show();
+		}
+		
 		String[] names = new String[currChaps.size()];
 		for (int i = 0; i < names.length; i++) {
 			names[i] = currChaps.get(i).enHeader;
