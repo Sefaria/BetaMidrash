@@ -3,6 +3,9 @@ package com.torahsummary.betamidrash;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+
+import com.torahsummary.betamidrash.API.APIException;
+
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
@@ -143,6 +146,7 @@ public class Header implements Parcelable {
 			if(i>1)
 				sql += ", ";
 		}
+		Log.d("header","1." + sql);
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()) {
 			do {
@@ -264,7 +268,7 @@ public class Header implements Parcelable {
 	}
 
 
-	public static ArrayList<Header> getHeaderChaps(Book book, int[] levels) {
+	public static ArrayList<Header> getHeaderChaps(Book book, int[] levels) throws APIException {
 		ArrayList<Header> headerList = getChapHeaders(book.bid, levels);
 		ArrayList <Integer> chapList = Text.getChaps(book.bid, levels);
 		ArrayList <Header> combinedList = new ArrayList<Header> ();

@@ -3,6 +3,8 @@ package com.torahsummary.betamidrash;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.torahsummary.betamidrash.API.APIException;
+
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -547,6 +549,9 @@ public class SearchActivity extends ListActivity {
 			} catch (SQLiteException e) {
 				handler.sendEmptyMessage(DB_ERROR);
 				// handler.sendEmptyMessage(DB_ERROR);
+			} catch (APIException e) {
+				handler.sendEmptyMessage(DB_ERROR); //TODO change this
+				
 			}
 
 		}

@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -25,6 +26,8 @@ public class API {
 	final static String TEXT_URL = "http://www.sefaria.org/api/texts/";
 	final static String COUNT_URL = "http://www.sefaria.org/api/counts/";
 	final static String SEARCH_URL = "http://search.sefaria.org:788/sefaria/_search/";
+	final static String LINK_URL = "http://staging.sefaria.org/api/links/";
+	final static String LINK_ZERO_TEXT = "?text=0";
 	final static String ZERO_CONTEXT = "&context=0";
 	final static String ZERO_COMMENTARY = "&commentary=0";
 	
@@ -33,9 +36,11 @@ public class API {
 	
 	
 	final static int STATUS_NONE = 0;
-	final static int STATUS_DONE = 1;
+	final static int STATUS_GOOD = 1;
+	final static int STATUS_ERROR = 2;
 	
 	private String data = "";
+	private String url = "";
 	private int status = STATUS_NONE;
 	private boolean isDone = false;
 	String sefariaData = null;
@@ -49,6 +54,7 @@ public class API {
 	
 	private String fetchData(String urlString){
 		String data = "";
+		this.url = urlString;
 		try {
 			URL url = new URL(urlString);
 			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
@@ -62,14 +68,29 @@ public class API {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 			Log.d("ERROR", "malformed url");
-			//TODO make toast or message to user
+			status = STATUS_ERROR;
 		} catch (IOException e) {
 			e.printStackTrace();
 			Log.d("ERROR", "io exception");
+			status = STATUS_ERROR;
 		}
 		return data;
 	}
 	
+	
+	public class APIException extends Exception{
+
+		/**
+		 * 
+		 */
+		public APIException(){
+			super();
+		}
+		
+		private static final long serialVersionUID = 1L;
+
+	}
+
 	/**
 	 * //add ability to not wait for task (and return  so that api.data can be used later) 
 	 * When looking for data you can call api.getData() which will only return after complete.
@@ -146,11 +167,28 @@ public class API {
 	 * 
 	 * @param url
 	 * @return data as String from url request
+	 * @throws APIException 
 	 */
-	public static String getDataFromURL(String url){
-		API api = getDataFromURLAsync(url);
-		//creating an instance of api which will fetch data then wait until this is done to return data
-		String data = api.getData();
+	public static String getDataFromURL(String url) throws APIException{
+		API api = getDataFromURLAsync(url);//creating an instance of api which will fetch data
+		Cache cache = Cache.getCache(url);
+		String data;
+		if(cache != null  &&  !cache.isExpired()){
+			data = cache.data;
+		}
+		else{
+			data = api.getData();//waiting for data to be returned from intern
+			if(api.status != API.STATUS_GOOD){
+				if(cache != null)
+					data  = cache.data;
+				else{
+					Log.d("api","trhowing apiexception");
+					throw api.new APIException();
+				}
+			}
+		}
+		
+		
 		Log.d("api","in getDataFromURL: data length: " + data.length() );
 		return data;
 	}
@@ -183,7 +221,7 @@ public class API {
 					heText = heArray.getString(i);
 				}catch(JSONException e){
 					Log.d("api",e.toString());
-				}
+				}	
 				Text text = new Text(enText, heText);
 			
 				text.bid = bid;
@@ -222,11 +260,39 @@ public class API {
 	}
 	
 	
-	private static List<Text> getSearchResults(String query,int from) {
-		List<Text> texts = new ArrayList<Text>();
-		String url = SEARCH_URL + "?" + "q=%D7%90%D7%95%D7%9E%D7%A8" + "&from=" +from; 
-		 
-		//TODO make working function
+	public static ArrayList<Text> getSearchResults(String query,String[] filterArray, int from, int offset) throws APIException {
+		ArrayList<Text> texts = new ArrayList<Text>();
+		String url = SEARCH_URL + "?" + "&from=" +from + "&offset=" + offset + "q=" + Uri.encode(query) ;
+		String data = getDataFromURL(url);
+		try {
+			JSONObject jsonData = new JSONObject(data);
+			JSONArray hits = jsonData.getJSONObject("hits").getJSONArray("hits");
+			for(int i=0;i<hits.length();i++){
+				JSONObject hit = hits.getJSONObject(i);
+				if(!hit.getString("_type").equals("text"))
+					continue;//TODO make it such that this won't prevent further searches
+				JSONObject source = hit.getJSONObject("_source");
+				String content = source.getString("content");
+				if(content.length() > 103)
+					content = content.substring(0, 100) + "..."; 
+				content = "<big><b>" + source.getString("ref") + "</b></big> " + content;
+				String lang = source.getString("lang");
+				Text text = null;
+				if(lang.equals("he"))
+					text = new Text("", content);
+				else //lang is en
+					text = new Text(content,"");
+				text.bid = 2; //TODO this needs more real info
+				text.levels[0] = text.level1 = 1;
+				text.levels[1] = text.level2 = 1;
+				//z2Log.d("api",text.toString());
+				texts.add(text);
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return texts;
 		
 	}
@@ -238,9 +304,16 @@ public class API {
 	 * @param limit
 	 * @param offset
 	 * @return
+	 * @throws APIException 
 	 */
 	public static List<Text> getChapLinks(Text dummyChapText, int limit, int offset) {
 		List<Text> texts = new ArrayList<Text>();
+		String place = createPlace(Book.getTitle(dummyChapText.bid), dummyChapText.levels);
+		String url = LINK_URL + place + LINK_ZERO_TEXT;
+		
+		//String data = getDataFromURL(url); 
+		//TODO parse
+		//TODO make async getting links
 		
 		return texts;
 
@@ -257,8 +330,9 @@ public class API {
 	 * @param bookTitle
 	 * @param levels
 	 * @return chapList (a list of all the chapter numbers)
+	 * @throws APIException 
 	 */
-	public static ArrayList<Integer> getChaps(String bookTitle, int [] levels){
+	public static ArrayList<Integer> getChaps(String bookTitle, int [] levels) throws APIException{
 		String place = bookTitle.replace(" ", "_"); 
 		String url = COUNT_URL + place;
 		String data = getDataFromURL(url);
@@ -289,13 +363,7 @@ public class API {
 	}
 	
 	
-	/**
-	 * Will only return after response from web is complete.
-	 * @param bookTitle
-	 * @param levels
-	 * @return textList
-	 */
-	static public List<Text> getTextsFromAPI(String bookTitle, int[] levels){ //(String booktitle, int []levels)
+	static private String createPlace(String bookTitle, int[] levels){
 		String place = bookTitle.replace(" ", "_"); //the api call doesn't have spaces
 		
 		for(int i= levels.length-1;i>=0;i--){
@@ -304,6 +372,18 @@ public class API {
 				continue;
 			place += "." + levels[i];
 		}
+		return place;
+	}
+	
+	/**
+	 * Will only return after response from web is complete.
+	 * @param bookTitle
+	 * @param levels
+	 * @return textList
+	 * @throws APIException 
+	 */
+	static public List<Text> getTextsFromAPI(String bookTitle, int[] levels) throws APIException{ //(String booktitle, int []levels)
+		String place = createPlace(bookTitle, levels);
 		String completeUrl = TEXT_URL + place + "?" + ZERO_CONTEXT + ZERO_COMMENTARY;
 		String data = getDataFromURL(completeUrl);
 		List<Text> textList = parseJSON(data,levels,Book.getBid(bookTitle));
@@ -320,9 +400,13 @@ public class API {
 		protected String doInBackground(String... params) {
 			String result = fetchData(params[0]);
 			data = result;//put into data so that the static function can pull the data
-			if(status == STATUS_NONE)
-				status = STATUS_DONE;
+			if(status == STATUS_NONE && data.length() >0)
+				status = STATUS_GOOD;
 			isDone = true; 
+			
+			if(status == STATUS_GOOD && data.length() >0){
+				Cache.add(url, data); //cache data for later
+			}
 			return result;
 		}
 

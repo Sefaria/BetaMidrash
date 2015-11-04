@@ -884,7 +884,10 @@ public class VerseAdapter extends ArrayAdapter<Text> {
 				break;
 			case LINK_LOAD_FAILED:
 				isLoadingLinks = false;
-				Toast.makeText(context, context.getString(R.string.no_links),Toast.LENGTH_SHORT).show();
+				String message = context.getString(R.string.no_links);
+				if(API.useAPI())
+					message = "Link feature requires library (download in Settings)";
+				Toast.makeText(context, message,Toast.LENGTH_SHORT).show();
 				//convoluted way of accessing list view and x mark...
 				((View)lmsg.inputView.getParent().getParent()).findViewById(android.R.id.list).setVisibility(View.VISIBLE);
 				((View)lmsg.inputView.getParent().getParent()).findViewById(R.id.titleClose).setVisibility(View.GONE);

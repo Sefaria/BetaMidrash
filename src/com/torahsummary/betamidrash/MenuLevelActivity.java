@@ -112,11 +112,7 @@ public class MenuLevelActivity extends ListActivity {
 		
 		if(!Database2.checkDataBase())
 			Database2.createAPIdb();
-		if(!CacheDB.checkDataBase()){
-			CacheDB cacheDB = new CacheDB(this);
-			CacheDB.add();
-			
-		}
+
 		
 		if (!AppMenu.inited) { //you just started the app
 

@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.torahsummary.betamidrash.API.APIException;
+
 
 
 
@@ -37,7 +39,7 @@ public class Text implements Parcelable {
 		this.enText = enText;
 		this.heText = heText;
 		this.tid = 0;
-		this.bid = bid;
+		this.bid = 0;
 		levels = new int [] {0,0,0,0,0,0};
 		this.displayNum = true;//unless we know otherwise, we'll default to display the verse Number
 	}
@@ -157,7 +159,7 @@ public class Text implements Parcelable {
 		return textList;
 	}
 
-	public static List<Text> get(Book book, int[] levels) {
+	public static List<Text> get(Book book, int[] levels) throws APIException {
 
 		if(book.textDepth != levels.length){
 			Log.e("Error_sql", "wrong size of levels.");
@@ -252,8 +254,9 @@ public class Text implements Parcelable {
 	 * 	int[] levels = new {0, 12};
 	 * 	Text.get(1, levels); //get book bid 1 everything in chap 12.
 	 * @return
+	 * @throws APIException 
 	 */
-	public static List<Text> get(int bid, int[] levels) {
+	public static List<Text> get(int bid, int[] levels) throws APIException {
 		List<Text> textList = new ArrayList<Text>();
 		try {
 			getFromDB(bid,levels);
@@ -424,7 +427,7 @@ public class Text implements Parcelable {
 		return nonZeroLevel;
 	}
 
-	public static ArrayList<Integer> getChaps(int bid, int[] levels) {
+	public static ArrayList<Integer> getChaps(int bid, int[] levels) throws APIException {
 		Database2 dbHandler = Database2.getInstance(MyApp.context);
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 
