@@ -23,7 +23,7 @@ import android.widget.Toast;
 public class MyApp extends Application {
 	//private static final String GOOGLE_AN_ID = "UA-59002633-2"; ///THIS IS IS ONLY FOR TESTING!!!
 	private static final String GOOGLE_AN_ID = "UA-60342564-2"; //OLD: "UA-60342564-1"; //new: -2
-	public static Context context;
+	private static Context context;
 	public static Activity currActivityContext;
 	public static final String APP_NAME = "BetaMidrash";
 	public static final String CATEGORY_NEW_TEXT = "Opened Text Page";
@@ -47,6 +47,9 @@ public class MyApp extends Application {
 		getTracker();
 	}
 	
+	public static Context getContext(){
+		return context;
+	}
 	
 	/* Checks if external storage is available for read and write */
 	public static boolean isExternalStorageWritable() {

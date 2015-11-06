@@ -130,7 +130,7 @@ public class Link implements Parcelable {
 	}
 
 	static List<Pair<String, Integer>> getCountsTitles(Text text){
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		Database2 dbHandler = Database2.getInstance();
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 
 		List<Pair<String, Integer>> countList = new ArrayList<Pair<String, Integer>>();
@@ -163,7 +163,7 @@ public class Link implements Parcelable {
 	}
 
 	public static List<Pair<String, Integer>> getCountsTitlesFromLinks_small(Text dummyText, int tidMin, int tidMax){
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		Database2 dbHandler = Database2.getInstance();
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 
 		List<Pair<String, Integer>> countList = new ArrayList<Pair<String, Integer>>();
@@ -238,7 +238,7 @@ public class Link implements Parcelable {
 	 */
 
 	private static List<Text> getLinkedTextsFromDB(Text text, int limit, int offset) {
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		Database2 dbHandler = Database2.getInstance();
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 		List<Text> linkList = new ArrayList<Text>();
 
@@ -290,7 +290,7 @@ public class Link implements Parcelable {
 
 
 	private static List<Text> getLinkedChapTextsFromDB(Text text, int limit, int offset) {
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		Database2 dbHandler = Database2.getInstance();
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 
 		List<Text> linkList = new ArrayList<Text>();
@@ -338,7 +338,7 @@ public class Link implements Parcelable {
 	}
 
 	private static List<Link> getLinks(Text text, int limit, int offset) {
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		Database2 dbHandler = Database2.getInstance();
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 
 		List<Link> linkList = new ArrayList<Link>();

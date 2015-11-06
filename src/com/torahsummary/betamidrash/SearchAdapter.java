@@ -53,7 +53,7 @@ public class SearchAdapter extends ArrayAdapter<Text> {
 		AutofitTextView titleTV = (AutofitTextView) v.findViewById(R.id.titleView);
 		String [] textLocation = Header.getTextLocationString(text.levels, tempBook);
 		String bookTitle = "";
-		SharedPreferences settings = MyApp.context.getSharedPreferences("appSettings", Context.MODE_PRIVATE);
+		SharedPreferences settings = MyApp.getContext().getSharedPreferences("appSettings", Context.MODE_PRIVATE);
 		int menuLang = settings.getInt("menuLang", 0);
 		if (menuLang == SettingsActivity.EN_CODE)
 			bookTitle = tempBook.title + " " + textLocation[0];

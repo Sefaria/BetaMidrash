@@ -121,7 +121,7 @@ public class Header implements Parcelable {
 	 * @return empty list if there's a problem. And normally a list of headers for each nonZero level of levels (headers.get(0) is the lowest non zero level (ex. verse))
 	 */
 	private static ArrayList<Header> getAllSectionDepthsHeaders(Book book, int [] levels){
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		Database2 dbHandler = Database2.getInstance();
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 		ArrayList <Header> headers = new ArrayList<Header> ();
 		ArrayList <Header> finalHeaders = new ArrayList<Header> ();
@@ -301,7 +301,7 @@ public class Header implements Parcelable {
 
 	private static ArrayList<Header> getChapHeaders(int bid, int[] levels) {
 
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		Database2 dbHandler = Database2.getInstance();
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 
 		ArrayList<Header> chapList = new ArrayList<Header>();

@@ -141,7 +141,7 @@ public class Searching {
 	}
 
 	private static ArrayList<Integer> getSearchingChunks(String query) throws SQLException{
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		Database2 dbHandler = Database2.getInstance();
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 		String [] words =  getWords(query);
 		ArrayList<Integer> list = new ArrayList<Integer>();
@@ -264,12 +264,12 @@ public class Searching {
 		}catch(Exception e){
 			try{
 				p = Pattern.compile(word);
-				Toast.makeText(MyApp.currActivityContext,MyApp.context.getString(R.string.error_parsing_query_n), Toast.LENGTH_SHORT).show();
+				Toast.makeText(MyApp.currActivityContext,MyApp.getContext().getString(R.string.error_parsing_query_n), Toast.LENGTH_SHORT).show();
 			}
 			catch(Exception e1)
 			{
 				p = Pattern.compile("");
-				Toast.makeText(MyApp.currActivityContext, MyApp.context.getString(R.string.error_parsing_query), Toast.LENGTH_SHORT).show();
+				Toast.makeText(MyApp.currActivityContext, MyApp.getContext().getString(R.string.error_parsing_query), Toast.LENGTH_SHORT).show();
 			}
 		}
 
@@ -290,7 +290,7 @@ public class Searching {
 				enPattern  = Pattern.compile(word.replaceAll("_", replace_(false)).replaceAll("%", replacePer(false)),Pattern.CASE_INSENSITIVE); //make case insensitive
 		}catch(Exception e){//maybe try excaping the regex
 			enPattern = Pattern.compile("");
-			Toast.makeText(MyApp.currActivityContext, MyApp.context.getString(R.string.error_parsing_query), Toast.LENGTH_SHORT).show();
+			Toast.makeText(MyApp.currActivityContext, MyApp.getContext().getString(R.string.error_parsing_query), Toast.LENGTH_SHORT).show();
 		}
 		//String wordLower = Util.getRemovedNikudString(word.toLowerCase(Locale.US));
 		for (int i = 0; i< list.size(); i++){
@@ -413,7 +413,7 @@ public class Searching {
 
 
 	private static ArrayList<Pair<Integer,Integer>> createTidList(String likeStatement, String [] filterArray){
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		Database2 dbHandler = Database2.getInstance();
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 		ArrayList<Pair<Integer,Integer>> tidMinMax = new ArrayList<Pair<Integer,Integer>>();
 		String bookSQL = "Select minTid, maxTid FROM Books WHERE " + 
@@ -466,7 +466,7 @@ public class Searching {
 		int endSearchingLoop;
 		long startTime = System.currentTimeMillis();
 		try {
-			Database2 dbHandler = Database2.getInstance(MyApp.context);
+			Database2 dbHandler = Database2.getInstance();
 			SQLiteDatabase db = dbHandler.getReadableDatabase();
 
 			if(searchableChunks == null)//it's the first time searching this word
@@ -561,7 +561,7 @@ public class Searching {
 			return APISearch(word, filterArray);
 		}
 		
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		Database2 dbHandler = Database2.getInstance();
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 		int lastTID = currChunkIndex;
 

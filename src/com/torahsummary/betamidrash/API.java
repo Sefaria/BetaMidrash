@@ -246,7 +246,7 @@ public class API {
 	 * @return false if there's a Text table in the db. true if not (and should be using API)
 	 */
 	public static boolean useAPI(){
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		Database2 dbHandler = Database2.getInstance();
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 		//TODO maybe check the settings table instead (api should be 1)
 		try{

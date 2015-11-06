@@ -73,10 +73,8 @@ public class Database2 extends SQLiteOpenHelper{
 		}		
 	}
 	
-	
-	
-	public static Database2 getInstance(Context context) {
-
+	public static Database2 getInstance() {
+		Context context = MyApp.getContext();
 		// Use the application context, which will ensure that you 
 		// don't accidentally leak an Activity's context.
 		// See this article for more information: http://bit.ly/6LRzfx
@@ -208,7 +206,7 @@ public class Database2 extends SQLiteOpenHelper{
 	public static int getVersion(){
 		int versionNum = -1;
 		try{
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		Database2 dbHandler = Database2.getInstance();
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 		Cursor cursor = db.query("Settings", null, "_id" + "=?",
 				new String[] { "version" }, null, null, null, null);

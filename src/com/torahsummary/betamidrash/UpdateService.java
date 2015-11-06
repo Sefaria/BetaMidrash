@@ -207,7 +207,7 @@ public class UpdateService extends Service {
 				return;
 			}
 
-			if((newestAppVersionNum > MyApp.context.getPackageManager().getPackageInfo(MyApp.appPackageName, 0).versionCode)
+			if((newestAppVersionNum > MyApp.getContext().getPackageManager().getPackageInfo(MyApp.appPackageName, 0).versionCode)
 					&& !MyApp.askedForUpgradeThisTime
 					){
 				Toast.makeText(MyApp.currActivityContext, MyApp.currActivityContext.getString(R.string.upgrade_to_newest) + " " + MyApp.APP_NAME, Toast.LENGTH_SHORT).show();
@@ -416,7 +416,7 @@ public class UpdateService extends Service {
 
 		
 		String ns = Context.NOTIFICATION_SERVICE;
-        NotificationManager nMgr = (NotificationManager) MyApp.context.getSystemService(ns);
+        NotificationManager nMgr = (NotificationManager) MyApp.getContext().getSystemService(ns);
         nMgr.cancel(UpdateService.NOTIFICATION_ID);
         
 	}

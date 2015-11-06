@@ -45,7 +45,7 @@ public class Text implements Parcelable {
 	}
 
 	public Text(int tid) {
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		Database2 dbHandler = Database2.getInstance();
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 
 		try{
@@ -126,7 +126,7 @@ public class Text implements Parcelable {
 
 
 	static List<Text> getAll() {
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		Database2 dbHandler = Database2.getInstance();
 		List<Text> textList = new ArrayList<Text>();
 		// Select All Query
 		String selectQuery = "SELECT * FROM " + TABLE_TEXTS;
@@ -161,7 +161,7 @@ public class Text implements Parcelable {
 
 	//TODO remove this function...
 	private static List<Text> getAllTextsFromDB2() {
-		Database2 dbHandler = new Database2(MyApp.context);
+		Database2 dbHandler = new Database2(MyApp.getContext());
 		List<Text> textList = new ArrayList<Text>();
 		// Select All Query
 		String selectQuery = "SELECT  * FROM " + "Texts";
@@ -187,7 +187,7 @@ public class Text implements Parcelable {
 
 	private static int max(int bid, int[] levels) {
 
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		Database2 dbHandler = Database2.getInstance();
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 		int nonZeroLevel;
 		for(nonZeroLevel = 0; nonZeroLevel < levels.length; nonZeroLevel++){
@@ -221,7 +221,7 @@ public class Text implements Parcelable {
 
 	private static List<Text> getFromDB(int bid, int[] levels) {
 		List<Text> textList = new ArrayList<Text>();
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		Database2 dbHandler = Database2.getInstance();
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 
 		Cursor cursor = db.rawQuery("SELECT DISTINCT * FROM "+ TABLE_TEXTS +" " + fullWhere(bid, levels) + " ORDER BY " + orderBy(bid, levels), null);
@@ -331,7 +331,7 @@ public class Text implements Parcelable {
 			public void run() {
 				try {
 					int chunkSize = 5000;
-					Database2 dbHandler = Database2.getInstance(MyApp.context);
+					Database2 dbHandler = Database2.getInstance();
 					SQLiteDatabase db = dbHandler.getReadableDatabase();
 
 					List<Text> textList = new ArrayList<Text>();
@@ -403,7 +403,7 @@ public class Text implements Parcelable {
 	}
 
 	public static ArrayList<Integer> getChaps(int bid, int[] levels) throws APIException {
-		Database2 dbHandler = Database2.getInstance(MyApp.context);
+		Database2 dbHandler = Database2.getInstance();
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
 
 		ArrayList<Integer> chapList = new ArrayList<Integer>();

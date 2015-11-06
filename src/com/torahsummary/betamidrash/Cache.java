@@ -35,7 +35,7 @@ public class Cache{
 		if(true) return false;
 		int time = 123;
 
-		File path = MyApp.context.getCacheDir();
+		File path = MyApp.getContext().getCacheDir();
 		FileOutputStream outputStream;
 		try {
 			outputStream = MyApp.currActivityContext.openFileOutput(path+"/" + urlToHashFile(url), Context.MODE_PRIVATE);
