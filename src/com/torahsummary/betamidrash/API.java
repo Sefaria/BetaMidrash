@@ -248,10 +248,11 @@ public class API {
 	public static boolean useAPI(){
 		Database2 dbHandler = Database2.getInstance(MyApp.context);
 		SQLiteDatabase db = dbHandler.getReadableDatabase();
-
+		//TODO maybe check the settings table instead (api should be 1)
 		try{
 			Cursor cursor = db.query(Text.TABLE_TEXTS, null, "_id" + "=?",
 					new String[] { String.valueOf(1) }, null, null, null, null);
+			Log.d("api", "got here without problems" + cursor);
 			return false;
 		}catch(SQLiteException e){
 			return true;

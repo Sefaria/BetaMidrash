@@ -110,13 +110,15 @@ public class MenuLevelActivity extends ListActivity {
 		}
 		settings = getSharedPreferences("appSettings", Context.MODE_PRIVATE);
 		
-		if(!Database2.checkDataBase())
-			Database2.createAPIdb();
+		
+		
 
 		
 		if (!AppMenu.inited) { //you just started the app
-
-
+				
+			Log.d("api","testing for api db");
+			if(API.useAPI())
+				Database2.createAPIdb();
 
 			long IDLong = settings.getLong("randomID", 0);
 			if(IDLong == 0){//randomID for this person is not yet defined

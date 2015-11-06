@@ -56,9 +56,15 @@ public class Book implements Parcelable {
 	public String heTitle;
 	public int languages;
 
+	
+	@Override
+	public String toString() {		
+		return "bid: " + bid  + " commentsOn: " + commentsOn + " sectionNames: " + sectionNames + " categories: "+ categories + 
+				"textDepth: " + textDepth + "wherePage: " + wherePage +" title: "  + title + "heTitle: " + heTitle + Klanguages + languages;
+	}
+	
 	public void log(){
-		Log.d("sql_dis","bid: " + bid  + " commentsOn: " + commentsOn + " sectionNames: " + sectionNames + " categories: "+ categories + 
-				"textDepth: " + textDepth + "wherePage: " + wherePage +" title: "  + title + "heTitle: " + heTitle + Klanguages + languages);  
+		Log.d("sql_dis",toString());  
 	}
 
 	public static final String TABLE_BOOKS = "Books";

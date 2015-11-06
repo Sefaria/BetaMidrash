@@ -93,7 +93,6 @@ public class Database2 extends SQLiteOpenHelper{
 		try{
 			String myPath = DB_PATH + DB_NAME + ".db";
 			checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-
 		}catch(Exception e){
 			MyApp.sendException(e, "database does't exist");
 			//database does't exist yet.

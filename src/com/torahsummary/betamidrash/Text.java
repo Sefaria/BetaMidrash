@@ -109,8 +109,9 @@ public class Text implements Parcelable {
 		enText = cursor.getString(2);
 		heText = cursor.getString(3);
 		levels = new int []{0,0,0,0,0,0};
-		for(int i=0;i<10;i++)
-			levels[i -4] = cursor.getInt(i); 
+		for(int i=0;i<6;i++){
+			levels[i] = cursor.getInt(i+4); 
+		}
 		displayNum = (cursor.getInt(10) != 0);
 
 
@@ -124,7 +125,7 @@ public class Text implements Parcelable {
 
 
 
-	private static List<Text> getAll() {
+	static List<Text> getAll() {
 		Database2 dbHandler = Database2.getInstance(MyApp.context);
 		List<Text> textList = new ArrayList<Text>();
 		// Select All Query
@@ -246,9 +247,10 @@ public class Text implements Parcelable {
 	 * @throws APIException 
 	 */
 	public static List<Text> get(int bid, int[] levels) throws APIException {
+		
 		List<Text> textList = new ArrayList<Text>();
 		try {
-			getFromDB(bid,levels);
+			textList = getFromDB(bid,levels);
 		}catch(SQLiteException e){
 			if(!e.toString().contains(API.NO_TEXT_MESSAGE)){
 				throw e; //don't know what the problem is so throw it back out
