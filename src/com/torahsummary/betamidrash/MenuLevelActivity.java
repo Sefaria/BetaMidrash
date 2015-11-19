@@ -119,7 +119,7 @@ public class MenuLevelActivity extends ListActivity {
 			Log.d("api","testing for api db");
 			if(API.useAPI()){
 				Random random = new Random();
-				int num = random.nextInt(7);
+				int num = random.nextInt(6);
 				if(num == 0)
 					Toast.makeText(this, "You can download Library in Settings->Update Library to use offline, links, and searching.", Toast.LENGTH_LONG).show();
 				Database2.createAPIdb();
