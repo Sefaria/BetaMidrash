@@ -117,8 +117,14 @@ public class MenuLevelActivity extends ListActivity {
 		if (!AppMenu.inited) { //you just started the app
 				
 			Log.d("api","testing for api db");
-			if(API.useAPI())
+			if(API.useAPI()){
+				Random random = new Random();
+				int num = random.nextInt(7);
+				if(num == 0)
+					Toast.makeText(this, "You can download Library in Settings->Update Library to use offline, links, and searching.", Toast.LENGTH_LONG).show();
 				Database2.createAPIdb();
+				
+			}
 
 			long IDLong = settings.getLong("randomID", 0);
 			if(IDLong == 0){//randomID for this person is not yet defined
