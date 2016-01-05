@@ -23,3 +23,8 @@ If you have any questions, please email us at betamidrash@gmail.com.
 ### Libs
 Also needs google-play-services_lib to run. Save lib to same directory as BetaMidrash.
 
+## Exploring the Code
+
+## License
+
+[GPL](http://www.gnu.org/copyleft/gpl.html)
