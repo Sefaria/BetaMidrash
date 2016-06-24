@@ -658,9 +658,15 @@ public class MenuLevelActivity extends ListActivity {
 	};
 	
 	public void jewcerClick(View v) {
-		String url = "http://www.jewcer.com/project/betamidrash";
-		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-		startActivity(browserIntent);
+		//String url = "http://www.jewcer.com/project/betamidrash";
+		//Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+		//startActivity(browserIntent);
+		final String appPackageName = "org.sefaria.sefaria";
+		try {
+		    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+		} catch (android.content.ActivityNotFoundException anfe) {
+		    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+		}
 	}
 	
 	//	public OnCheckedChangeListener cbListener = new OnCheckedChangeListener() {

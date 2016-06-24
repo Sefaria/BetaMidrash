@@ -60,11 +60,11 @@
             android:onClick="searchClick"
             android:src="@drawable/ic_action_search" />
     </LinearLayout>
-<!-- 
+
     <LinearLayout 
         android:id="@+id/footer"
         android:gravity="center"
-        android:background="@android:color/holo_green_light"
+        android:background="#dddddd"
         android:minHeight="40dp"
         android:onClick="jewcerClick"
         android:layout_height="wrap_content"
@@ -75,11 +75,11 @@
             android:layout_width="match_parent"
             android:textColor="@android:color/black"
             android:textStyle="bold"
-            android:padding="15dp"
+            android:padding="10dp"
             android:gravity="center"
-            android:text="Help our Jewcer campaign to spread Torah!"/>
+            android:text="We've teamed up with Sefaria to build a state-of-the-art app for learning Torah. Since we will no longer be updating BetaMidrash, please download the new Sefaria app here. It has all the latest texts, translations and features!"/>
     </LinearLayout>
-  -->
+  
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
