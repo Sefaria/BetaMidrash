@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.torahsummary.betamidrash"
 
-    android:versionCode="199"
-    android:versionName="1.99"
+    android:versionCode="200"
+    android:versionName="2.00"
     android:installLocation="auto"
 	>
 	
