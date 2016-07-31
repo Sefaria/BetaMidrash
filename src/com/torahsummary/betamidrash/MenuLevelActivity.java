@@ -127,6 +127,7 @@ public class MenuLevelActivity extends ListActivity {
 			}
 
 			long IDLong = settings.getLong("randomID", 0);
+			boolean isFirstTime = false;
 			if(IDLong == 0){//randomID for this person is not yet defined
 
 				Random random = new Random();
@@ -134,10 +135,18 @@ public class MenuLevelActivity extends ListActivity {
 				Editor editor = settings.edit();
 				editor.putLong("randomID", IDLong);
 				editor.apply();
+				isFirstTime = true;
 			}
 			MyApp.randomID = String.valueOf(IDLong); //place person's ID into the randomID feild
 			MyApp.setTrackerID();
-
+			Random random = new Random();
+			View footer = findViewById(R.id.footer);
+			if(isFirstTime || random.nextInt(10) == 0){
+				footer.setVisibility(View.VISIBLE);
+			}else{
+				footer.setVisibility(View.GONE);
+			}
+			
 			AppMenu.displayLang = settings.getInt("menuLang", 0);
 			if(AppMenu.displayLang == 0){
 				int setMenuLang;
